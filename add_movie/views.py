@@ -6,6 +6,11 @@ from pprint import pprint
 from .models import genre_maps
 from user_info.views import arranged
 from find_match.views import find_vector
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+API_KEY= os.getenv("API_Read_Access_Token")
 
 from pymongo.errors import DuplicateKeyError
 
@@ -17,7 +22,7 @@ def home(request):
 
 headers = {
     "accept": "application/json",
-    "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJlOGJjMjcwMzEwYmNkYmRjOGU5NGNiYWIxNWM5NzFjZCIsIm5iZiI6MTc2MjY3NTU5Mi43MjQsInN1YiI6IjY5MTA0Yjg4OTkxM2QzYzRmOTg3NGQxZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.U-gSlo1XEJRrL4QmDMQADCtbsCrK5r_1_rCGcrSqnZU"
+    "Authorization": "Bearer "+ API_KEY
 }
 
 def maps(genre_ids):
