@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>movie_match</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="container-one">
+    <div>
+    <p style="font-size: 60px;">Movie_match</p>
+    </div>
+</div>
+<div class="container">
+<form method="POST" action="{% url 'actual_login' %}" form class="box">
+    <div class="field">
+        <label class="label" style="display: inline-block;">Username</label>
+        <p id="one" style="display: inline-block; margin-left: 5px; font-style: italic;  color: red;"></p>
+         <div class="control">
+            <input class="input" type="text" id="username_input" name="username_input" required>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" style="display: inline-block;">Password</label>
+        <p id="two" style="display: inline-block; margin-left: 5px; font-style: italic; color: red;"></p>
+        <div class="control">
+            <input class="input" type="password" id="password_input" name="password_input" required>
+        </div>
+    </div>
+
+    <button type="submit" class="button is-primary" id="submit">Log-in</button><br><br>
+    {% csrf_token %}
+    <a href="{% url 'register' %}" class="button is-primary">Register</a>
+</form>
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const submit = document.getElementById("submit");
+    const one = document.getElementById("one");
+    const two = document.getElementById("two");
+    const username_input = document.getElementById("username_input");
+    const password_input = document.getElementById("password_input");
+
+    submit.disabled = true;
+    {% if error1 %}
+          password_input.value = "{{ error1 }}";
+          one.innerHTML = "( Username not found! )";
+          one.style.display = "inline-block";
+    {% elif error2 %}
+          username_input.value = "{{error2}}";
+          two.innerHTML = "( Password doesn't match! )";
+          two.style.display = "inline-block";
+    {% endif %}
+
+    username_input.addEventListener("input", function() {
+        one.style.display = "none";
+    });
+
+    username_input.addEventListener("input", function() {
+        submit.disabled = false;
+    });
+
+    password_input.addEventListener("input", function() {
+      submit.disabled = false;
+    });
+  });
+</script>
+<style>
+    body{
+        font-family: 'Poppins', sans-serif;
+    }
+    .container-one{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-top: 50px;
+        color: #DA70D6;
+
+    }
+    .container
+    {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .box
+    {
+        margin-top: 20px;
+        width: 450px;
+    }
+
+</style>
+</body>
+</html>

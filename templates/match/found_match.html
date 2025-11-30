@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>movie_match</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+</head>
+<body>
+<a href=" {% url 'find_vector' %} " class="button is-info is-light home" style="margin-top: 10px; margin-left: 30px;"> <button><strong>Back</strong></button> </a>
+<a href=" {% url 'home' %} " class="button is-info is-light home" style="margin-top: 10px; margin-left: 15px;"> <button><strong>Home</strong></button> </a>
+
+{% for name, score in final_score.items %}
+
+   <div class="status box" style="width: 870px;margin-left: 30px; margin-top: 20px;">
+        <div class="other">
+            <p>{{name}}</p>
+            <button class="button is-primary is-light show_top10s" id="{{name}}">Top_10s</button>
+        </div>
+
+        <div class="score">
+            <br>
+            <p style="margin-bottom: 9px;">Match_score : {{score}} %</p>
+        {% if score < 50 %}
+            <progress class="progress is-danger" value="{{ score }}" max="100"></progress>
+        {% elif score == 50 %}
+            <progress class="progress is-info" value="{{ score }}" max="100"></progress>
+        {%  elif score > 50 %}
+            <progress class="progress is-primary" value="{{ score }}" max="100"></progress>
+        {% else %}
+            <progress class="progress is-small is-dark" max="100"></progress>
+        {% endif %}
+        </div>
+    </div>
+{% endfor %}
+
+</body>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll(".show_top10s").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const user = btn.id;
+                window.location.href = `/find_match/show_top_10s/?username=${user}`;
+            });
+        });
+    });
+</script>
+<style>
+    body{
+         font-family: 'Poppins', sans-serif;
+    }
+    .other{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+</style>
+</html>
+

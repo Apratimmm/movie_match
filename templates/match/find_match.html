@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>movie_match</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<a href=" {% url 'home' %} " class="button is-info is-light" style="margin-top: 10px; margin-left: 30px;"> <button><strong>Home</strong></button> </a>
+<br>
+<br>
+<div class="simple">
+<p style="margin-left: 30px; text-decoration: underline;">The site uses your top-10 list to find people with similar taste</p><br>
+<a href=" {% url 'show_results' %} " class="button is-warning is-light" ><button>Proceed</button></a>
+</div>
+
+</body>
+<style>
+    body{
+         font-family: 'Poppins', sans-serif;
+    }
+    .simple{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
+</html>

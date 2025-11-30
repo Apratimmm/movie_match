@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>movie_match</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+</head>
+<body>
+
+
+<a href=" {% url 'show_other_users' %} " class="button is-info is-light home" style="margin-top: 10px; margin-left: 30px;"> <button><strong>Back</strong></button> </a>
+
+<a href=" {% url 'home' %} " class="button is-info is-light home" style="margin-top: 10px; margin-left: 15px;"> <button><strong>Home</strong></button> </a>
+
+
+<div class="top_10">
+    <h1>{{ username }}'s Top_10's</h1>
+</div>
+
+<div class="number">
+        <p style="display: inline-block; margin-top: 10px; margin-right: 22px;">Movie-count : <strong>{{ number }}</strong> </p>
+    </div>
+
+{% if number == 0 %}
+<div class="empty">
+    <p>This user has an empty list!</p>
+</div>
+{% else %}
+
+    {% for movie in movies %}
+    <div class="columns" style="margin-top: 10px; margin-left: 10px;">
+        <div class="column is-narrow" style="margin-left: 10px;">
+            <div class="box" style="width: 270px; height: 350px;">
+                {% if movie.picture_url %}
+                    <img src="https://image.tmdb.org/t/p/w200{{ movie.picture_url }}" style="width: 100%; height: 100%; border: 2px solid black;">
+                {% else %}
+                <div class="noimage">
+                    <p>No image found!</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="column is-right" style="padding-bottom: 0px; margin-right: 20px;">
+        <div class="box" style="padding-bottom: 0px;">
+            <p class="title is-5" style="margin-bottom: 20px;">{{ movie.title }}</p>
+
+            <p class="subtitle">
+                Overview :  {{ movie.overview }}</p>
+
+            <p class="subtitle">
+                Release date :
+                {% if movie.release_date %}
+                    {{ movie.release_date }}
+                {% else %}
+                    No date classified
+                {% endif %}
+            </p>
+
+             <p class="subtitle">
+                Popularity :  {{ movie.popularity }}</p>
+
+            <p class="subtitle" style="display: inline-block">Genre(s) :
+                {% if movie.genres %}
+                    {% for genre in movie.genres %}
+                        <p class="subtitle genres" style="display: inline-block">{{ genre }}</p>
+                    {% endfor %}
+
+                {% else %}
+                    <p class="subtitle genres" style="display: inline-block">No genre classified</p>
+                {% endif %}
+            </p>
+
+        </div>
+        </div>
+    </div>
+    {% endfor %}
+
+{% endif %}
+
+</body>
+<script>
+
+    async function remove_movie(movie_id) {
+        window.location.href = `/add_movie/delete_movie/?movieId=${movie_id}` ;
+    }
+
+</script>
+<style>
+    body
+    {
+         font-family: 'Poppins', sans-serif;
+    }
+    .genres{
+        display: inline-block;
+        padding-top: 5px;
+        padding-bottom: 7px;
+        padding-left: 15px;
+        border-radius: 6px;
+
+    }
+    .top_10{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 50px;
+    }
+    .other{
+        margin-left: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+    }
+    .number{
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+    }
+    .empty{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 10px;
+        text-decoration: underline;
+        font-size: 20px;
+    }
+    .noimage{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 10px;
+        text-decoration: underline;
+        font-size: 20px;
+        margin-bottom: 280px;
+    }
+</style>
+</html>
