@@ -22,6 +22,7 @@ Built for movie lovers who want to connect with like-minded people and explore t
 - Bulma
 - MongoDB
 - The Movie Database (TMDb) API
+- Render 
 
 # Setup_instructions
 
