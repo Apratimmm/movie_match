@@ -10,6 +10,10 @@
 <a href=" {% url 'find_vector' %} " class="button is-info is-light home" style="margin-top: 10px; margin-left: 30px;"> <button><strong>Back</strong></button> </a>
 <a href=" {% url 'home' %} " class="button is-info is-light home" style="margin-top: 10px; margin-left: 15px;"> <button><strong>Home</strong></button> </a>
 
+<div class="notification is-danger is-light" style="position: fixed; left: 1000px; width: 400px; margin-top: 22px;">
+    <strong>Match_score : nan %</strong><br>
+    This means either your or the other user or both have an empty top_10 list
+</div>
 {% for name, score in final_score.items %}
 
    <div class="status box" style="width: 870px;margin-left: 30px; margin-top: 20px;">
