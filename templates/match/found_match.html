@@ -1,64 +1,142 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
+
 <head>
     <meta charset="UTF-8">
     <title>movie_match</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
+
 <body>
-<a href=" {% url 'find_vector' %} " class="button is-info is-light home" style="margin-top: 10px; margin-left: 30px;"> <button><strong>Back</strong></button> </a>
-<a href=" {% url 'home' %} " class="button is-info is-light home" style="margin-top: 10px; margin-left: 15px;"> <button><strong>Home</strong></button> </a>
+    <a href=" {% url 'find_vector' %} " class="button is-info is-light is-rounded"
+        style="margin-top: 30px; margin-left: 30px; height: 50px;">
+        <i class="fas fa-arrow-left mr-2"></i><strong>Back</strong>
+    </a>
+    <a href=" {% url 'home' %} " class="button is-info is-light is-rounded"
+        style="margin-top: 30px; margin-left: 15px; height: 50px;">
+        <i class="fas fa-home mr-2"></i><strong>Home</strong>
+    </a>
 
-<div class="notification is-danger is-light" style="position: fixed; left: 1000px; width: 400px; margin-top: 22px;">
-    <strong>Match_score : nan %</strong><br>
-    This means either you or the other user or both have an empty top_10 list
-</div>
-{% for name, score in final_score.items %}
+    <div class="container is-fluid" style="margin-top: 30px; padding: 0 40px;">
+        <div class="columns is-variable is-6">
+            <!-- Left Side: Results -->
+            <div class="column is-8">
+                <div id="results_container">
+                    {% for name, score in final_score %}
+                    <div class="status box match-item" data-score="{{ score }}" style="margin-bottom: 20px;">
+                        <div class="other">
+                            <p class="title is-5" style="margin-bottom: 0;">{{name}}</p>
+                            <button class="button is-primary is-light is-rounded show_top10s" id="{{name}}">
+                                <i class="fas fa-list-ol mr-2"></i>Top_10s
+                            </button>
+                        </div>
 
-   <div class="status box" style="width: 870px;margin-left: 30px; margin-top: 20px;">
-        <div class="other">
-            <p>{{name}}</p>
-            <button class="button is-primary is-light show_top10s" id="{{name}}">Top_10s</button>
-        </div>
+                        <div class="score">
+                            <br>
+                            <p style="margin-bottom: 9px;">Match_score : <strong>{{score}} %</strong></p>
+                            {% if score < 50 %} <progress class="progress is-danger" value="{{ score }}" max="100">
+                                </progress>
+                                {% elif score == 50 %}
+                                <progress class="progress is-info" value="{{ score }}" max="100"></progress>
+                                {% elif score > 50 %}
+                                <progress class="progress is-primary" value="{{ score }}" max="100"></progress>
+                                {% else %}
+                                <progress class="progress is-small is-dark" max="100"></progress>
+                                {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
 
-        <div class="score">
-            <br>
-            <p style="margin-bottom: 9px;">Match_score : {{score}} %</p>
-        {% if score < 50 %}
-            <progress class="progress is-danger" value="{{ score }}" max="100"></progress>
-        {% elif score == 50 %}
-            <progress class="progress is-info" value="{{ score }}" max="100"></progress>
-        {%  elif score > 50 %}
-            <progress class="progress is-primary" value="{{ score }}" max="100"></progress>
-        {% else %}
-            <progress class="progress is-small is-dark" max="100"></progress>
-        {% endif %}
+            <!-- Right Side: Options and Information -->
+            <div class="column is-4">
+                <div style="position: sticky; top: 30px;">
+                    <!-- Filter Panel -->
+                    <div class="box filter-panel" style="padding: 25px; border-top: 4px solid #DA70D6;">
+                        <p class="title is-5"><i class="fas fa-sliders-h mr-2"></i>Filter Matches</p>
+                        <div class="field">
+                            <label class="label">Minimum Score (%)</label>
+                            <div class="control has-icons-left">
+                                <input class="input is-rounded" type="number" id="min_score" placeholder="e.g. 50"
+                                    min="0" max="100">
+                                <span class="icon is-small is-left">
+                                    <i class="fas fa-percentage"></i>
+                                </span>
+                            </div>
+                            <p class="help">Show only users with a score above this value.</p>
+                        </div>
+                        <div class="buttons">
+                            <button id="apply_filter" class="button is-link is-light is-fullwidth is-rounded">
+                                <i class="fas fa-filter mr-2"></i>Apply Filter
+                            </button>
+                            <button id="clear_filter" class="button is-ghost is-fullwidth">Clear all Results</button>
+                        </div>
+                    </div>
+
+                    <!-- Original Information Panel -->
+                    <div class="notification is-danger is-light" style="margin-top: 20px;">
+                        <strong>Match_score : nan %</strong><br>
+                        This means either you or the other user or both have an empty top_10 list
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-{% endfor %}
 
 </body>
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
+        // Navigation logic
         document.querySelectorAll(".show_top10s").forEach(btn => {
             btn.addEventListener("click", () => {
                 const user = btn.id;
                 window.location.href = `/find_match/show_top_10s/?username=${user}`;
             });
         });
+
+        // Simplified Filter logic (Min only)
+        const applyBtn = document.getElementById("apply_filter");
+        const clearBtn = document.getElementById("clear_filter");
+        const minInput = document.getElementById("min_score");
+        const matchItems = document.querySelectorAll(".match-item");
+
+        applyBtn.addEventListener("click", () => {
+            const min = parseFloat(minInput.value) || 0;
+
+            matchItems.forEach(item => {
+                const score = parseFloat(item.getAttribute("data-score"));
+                if (isNaN(score)) {
+                    item.style.display = "none";
+                } else if (score >= min) {
+                    item.style.display = "block";
+                } else {
+                    item.style.display = "none";
+                }
+            });
+        });
+
+        clearBtn.addEventListener("click", () => {
+            minInput.value = "";
+            matchItems.forEach(item => {
+                item.style.display = "block";
+            });
+        });
     });
 </script>
 <style>
-    body{
-         font-family: 'Poppins', sans-serif;
+    body {
+        font-family: 'Poppins', sans-serif;
     }
-    .other{
+
+    .other {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
     }
 </style>
-</html>
 
+</html>

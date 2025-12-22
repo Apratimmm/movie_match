@@ -1,38 +1,113 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
+
 <head>
     <meta charset="UTF-8">
     <title>movie_match</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
-<a href=" {% url 'home' %} " class="button is-info is-light home" style="margin-top: 10px; margin-left: 30px;"> <button><strong>Home</strong></button> </a>
-<br><br>
-<p style="margin-left: 30px; text-decoration: underline;">The values are dependent on the movies in your top-10s!</p><br>
-{% for genre, count in info.items %}
-<div class="status">
-    <div>
-    <p>{{ genre }} : {{ count }}%</p>
-    </div>
-    <div style="width: 70%;">
-    <progress class="progress is-small progress is-link" value="{{ count }}" max="100"></progress><br>
-    </div>
-</div>
-{% endfor %}
+    <a href=" {% url 'home' %} " class="button is-info is-light is-rounded"
+        style="margin-top: 30px; margin-left: 30px; height: 50px;">
+        <i class="fas fa-home mr-2"></i><strong>Home</strong>
+    </a>
+    <br><br>
+    <p style="margin-left: 30px; text-decoration: underline;">The values are dependent on the movies in your top-10s!
+    </p>
+    <br>
 
-<style>
-    body{
-         font-family: 'Poppins', sans-serif;
-    }
+    <div class="container is-flex is-justify-content-center" style="margin-bottom: 30px;">
+        <div style="width: 300px; height: 300px;">
+            <canvas id="genreChart"></canvas>
+        </div>
+    </div>
+    <br>
+    {% for genre, count in info.items %}
+    <div class="status">
+        <div>
+            <strong>
+                <p>{{ genre }} : {{ count }}%</p>
+            </strong>
+        </div>
+        <div style="width: 60%;">
+            <progress class="progress is-small genre-progress" style="height: 20px;" value="{{ count }}" max="100"
+                data-index="{{ forloop.counter0 }}"></progress><br>
+        </div>
+    </div>
+    {% endfor %}
 
-    .status{
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-</style>
+    <script>
+        const colors = [
+            '#DA70D6', '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0',
+            '#9966FF', '#FF9F40', '#C9CBCF', '#7BC225', '#B33E3E'
+        ];
+
+        const ctx = document.getElementById('genreChart').getContext('2d');
+        const data = {
+            datasets: [{
+                data: [{% for count in info.values %}{{ count }}{% if not forloop.last %}, {% endif %} {% endfor %}],
+        backgroundColor: colors,
+            hoverOffset: 13
+            }]
+        };
+
+        const config = {
+            type: 'pie',
+            data: data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        enabled: false
+                    }
+                }
+            }
+        };
+
+        new Chart(ctx, config);
+
+        document.querySelectorAll('.genre-progress').forEach(progress => {
+            const index = progress.dataset.index % colors.length;
+            const color = colors[index];
+            progress.style.setProperty('--progress-color', color);
+            progress.style.color = color;
+        });
+    </script>
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .status {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .genre-progress::-webkit-progress-value {
+            background-color: var(--progress-color) !important;
+            transition: width 0.5s ease;
+        }
+
+        .genre-progress::-moz-progress-bar {
+            background-color: var(--progress-color) !important;
+        }
+
+        .genre-progress {
+            background-color: #ededed;
+            /* Track color */
+        }
+    </style>
 
 </body>
 

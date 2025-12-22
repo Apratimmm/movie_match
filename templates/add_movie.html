@@ -1,47 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
+
 <head>
     <meta charset="UTF-8">
     <title>movie_match</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
+
 <body onload="setmovie()">
 
-<a href=" {% url 'show' %} " class="button is-info is-light home" style="margin-top: 10px; margin-left: 30px;"> <button><strong>Back</strong></button> </a>
-<a href=" {% url 'home' %} " class="button is-info is-light home" style="margin-top: 10px; margin-left: 15px;"> <button><strong>Home</strong></button> </a>
+    <a href=" {% url 'show' %} " class="button is-info is-light is-rounded"
+        style="margin-top: 30px; margin-left: 30px; height: 50px;">
+        <i class="fas fa-arrow-left mr-2"></i><strong>Back</strong>
+    </a>
+    <a href=" {% url 'home' %} " class="button is-info is-light is-rounded"
+        style="margin-top: 30px; margin-left: 15px; height: 50px;">
+        <i class="fas fa-home mr-2"></i><strong>Home</strong>
+    </a>
 
-<div class="level-item" style="margin-top: 10px;">
-      <div class="field has-addons">
-        <p class="control">
-          <input type="text" class="input" placeholder="Enter movie name" id="movie_name" style="border-top-left-radius: 8px; border-bottom-left-radius: 8px;">
-        </p>
-        <p class="control" >
-          <button class="button" id="search_button" style="border-top-right-radius: 8px; border-bottom-right-radius: 8px;">Search</button>
-        </p>
-        <div id="csrf-token" style="display:none;">
-            {% csrf_token %}
+    <div class="level-item" style="margin-top: 30px; display: flex; justify-content: center;">
+        <div class="field has-addons" style="width: 25%;">
+            <p class="control is-expanded">
+                <input type="text" class="input is-rounded" placeholder="Enter movie name" id="movie_name"
+                    style="border-top-right-radius: 0; border-bottom-right-radius: 0; height: 45px;">
+            </p>
+            <p class="control">
+                <button class="button is-rounded" id="search_button"
+                    style="border-top-left-radius: 0; border-bottom-left-radius: 0; height: 45px;">
+                    <i class="fas fa-search mr-2"></i>Search
+                </button>
+            </p>
+            <div id="csrf-token" style="display:none;">
+                {% csrf_token %}
+            </div>
         </div>
-      </div>
-</div>
+    </div>
 
-<div style="margin-top: 10px; display: flex; align-items: center; justify-content: center;">
-<div>
-    {% if message %}
-    <br><br>
-    <h1 style="font-size: 30px;">
-        No movie found!
-    </h1>
+    <div style="margin-top: 10px; display: flex; align-items: center; justify-content: center;">
+        <div>
+            {% if message %}
+            <br><br>
+            <h1 style="font-size: 30px;">
+                No movie found!
+            </h1>
 
-{% endif %}
-</div>
-</div>
-{% for movie in movies %}
+            {% endif %}
+        </div>
+    </div>
+    {% for movie in movies %}
     <div class="columns" style="margin-top: 10px; margin-left: 10px;">
         <div class="column is-narrow" style="margin-left: 10px;">
-            <div class="box" style="width: 270px; height: 390px;">
+            <div class="box" style="width: 270px; height: 400px;">
                 {% if movie.picture_url %}
-                    <img src="https://image.tmdb.org/t/p/w200{{ movie.picture_url }}" style="width: 100%; height: 90%; border: 2px solid black;">
+                <img src="https://image.tmdb.org/t/p/w200{{ movie.picture_url }}"
+                    style="width: 100%; height: 90%; border: 2px solid black;">
                 {% else %}
                 <div class="noimage">
                     <p>No image found!</p>
@@ -49,138 +63,142 @@
                 {% endif %}
                 <div class="remove-container">
                     {{ movie|json_script:movie.id }}
-                    <button class="top10-btn remove-btn button is-success is-light" id="{{ movie.id }}" style="margin-top:10px, margin-bottom:10px;">Top 10</button>
+                    <button class="top10-btn remove-btn button is-success is-light is-rounded" id="{{ movie.id }}">
+                        <i class="fas fa-plus mr-2"></i>Top 10
+                    </button>
                 </div>
             </div>
         </div>
 
         <div class="column is-right" style="padding-bottom: 0px;">
-        <div class="box" style="padding-bottom: 0px;">
-            <p class="title is-5" style="margin-bottom: 20px;">{{ movie.title }}</p>
+            <div class="box" style="padding-bottom: 0px;">
+                <p class="title is-5" style="margin-bottom: 20px;">{{ movie.title }}</p>
 
-            <p class="subtitle">
-                Overview :  {{ movie.overview }}</p>
+                <p class="subtitle">
+                    Overview : {{ movie.overview }}</p>
 
-            <p class="subtitle">
-                Release date :
-                {% if movie.release_date %}
+                <p class="subtitle">
+                    Release date :
+                    {% if movie.release_date %}
                     {{ movie.release_date }}
-                {% else %}
+                    {% else %}
                     No date classified
-                {% endif %}
-            </p>
+                    {% endif %}
+                </p>
 
-             <p class="subtitle">
-                Popularity :  {{ movie.popularity }}</p>
+                <p class="subtitle">
+                    Popularity : {{ movie.popularity }}</p>
 
-            <p class="subtitle" style="display: inline-block">Genre(s) :
-                {% if movie.genres %}
+                <p class="subtitle" style="display: inline-block">Genre(s) :
+                    {% if movie.genres %}
                     {% for genre in movie.genres %}
-                        <p class="subtitle genres" style="display: inline-block">{{ genre }}</p>
-                    {% endfor %}
+                <p class="subtitle genres" style="display: inline-block">{{ genre }}</p>
+                {% endfor %}
 
                 {% else %}
-                    <p class="subtitle genres" style="display: inline-block">No genre classified</p>
+                <p class="subtitle genres" style="display: inline-block">No genre classified</p>
                 {% endif %}
-            </p>
+                </p>
 
-        </div>
+            </div>
         </div>
     </div>
 
 
-{% endfor %}
+    {% endfor %}
 
 
 </body>
 
 </html>
 <script>
-    document.addEventListener("DOMContentLoaded", function(event) {
+    document.addEventListener("DOMContentLoaded", function (event) {
         const search_button = document.getElementById("search_button");
 
-        search_button.onclick = function() {
+        search_button.onclick = function () {
             const movie = document.getElementById("movie_name").value.trim();
             const movie_name = encodeURIComponent(movie);
-            window.location.href= `/add_movie/search/?moviename=${movie_name}`;
+            window.location.href = `/add_movie/search/?moviename=${movie_name}`;
         };
 
     });
 
     function setmovie() {
-       {% if user_input %}
-            const movie_name = document.getElementById("movie_name");
-            movie_name.value = "{{ user_input }}";
-       {% endif %}
+        {% if user_input %}
+        const movie_name = document.getElementById("movie_name");
+        movie_name.value = "{{ user_input }}";
+        {% endif %}
     };
 
     document.querySelectorAll(".top10-btn").forEach(btn => {
-            btn.addEventListener("click", () => {
-                const movieId = btn.id;
-                const movie = JSON.parse(
-                              document.getElementById(movieId).textContent );
-                set_top10(movie, btn);
-            });
+        btn.addEventListener("click", () => {
+            const movieId = btn.id;
+            const movie = JSON.parse(
+                document.getElementById(movieId).textContent);
+            set_top10(movie, btn);
+        });
     });
 
 
     function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== "") {
-        const cookies = document.cookie.split(";");
-        for (let cookie of cookies) {
-            const c = cookie.trim();
-            if (c.startsWith(name + "=")) {
-                cookieValue = decodeURIComponent(c.substring(name.length + 1));
-                break;
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+            const cookies = document.cookie.split(";");
+            for (let cookie of cookies) {
+                const c = cookie.trim();
+                if (c.startsWith(name + "=")) {
+                    cookieValue = decodeURIComponent(c.substring(name.length + 1));
+                    break;
+                }
             }
-          }
         }
-    return cookieValue;
+        return cookieValue;
     }
 
     const csrftoken = getCookie("csrftoken");
 
-    async function set_top10(movie,button){
+    async function set_top10(movie, button) {
         const result = await fetch(`/add_movie/actually_add/`, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json",
-                                   "X-CSRFToken": csrftoken,
-                                   "Accept": "application/json"
-                                  } ,
-                        body: JSON.stringify(movie)
-                        });
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrftoken,
+                "Accept": "application/json"
+            },
+            body: JSON.stringify(movie)
+        });
         const message = await result.json();
         button.disabled = true;
 
-        if ( message.message == 'enough' ){
+        if (message.message == 'enough') {
             alert('list is full');
         }
 
-        else if ( message.message == 'no' ){
+        else if (message.message == 'no') {
             alert('movie already exists in the list');
             button.innerHTML = 'Added';
         }
 
-        else{
+        else {
             button.innerHTML = 'Added';
         }
-        console.log(message.message);
     }
 
 
 </script>
 
 <style>
-    body{
-         font-family: 'Poppins', sans-serif;
+    body {
+        font-family: 'Poppins', sans-serif;
     }
-    .remove-container{
+
+    .remove-container {
         display: flex;
         align-items: center;
         justify-content: center;
     }
-    .genres{
+
+    .genres {
         display: inline-block;
 
         padding-top: 5px;
@@ -190,19 +208,22 @@
         border-radius: 6px;
 
     }
-    .top_10{
+
+    .top_10 {
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 50px;
     }
-    .other{
+
+    .other {
         margin-left: 10px;
         display: flex;
         justify-content: space-between;
         align-items: baseline;
     }
-    .noimage{
+
+    .noimage {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -211,6 +232,4 @@
         font-size: 20px;
         margin-bottom: 280px;
     }
-
-
 </style>

@@ -1,120 +1,298 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="color-scheme" content="light only">
     <title>movie_match</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
+
 <body>
 
     <div class="container-one">
-    <div>
-    <p style="font-size: 60px;">Movie_match</p>
-    </div>
-</div>
-<div class="container">
-<form method="post" action="{% url 'add' %}" class="box">
-    {% csrf_token %}
-
-    <div class="field">
-        <label class="label" style="display: inline-block;">Username</label>
-        <p id="one" style="display: inline-block; margin-left: 5px; font-style: italic;"></p>
-        <div class="control">
-            <input type="text" class="input" name="username" id="username"required>
+        <div>
+            <p style="font-size: 60px;">Movie_match</p>
         </div>
     </div>
+    <div class="container">
+        <form method="post" action="{% url 'add' %}" class="box">
+            {% csrf_token %}
 
-    <button type="button" id="check_username" class="button is-primary">Check username</button>
-    <br><br>
-    <div class="field">
-        <label class="label" style="display: inline-block;">Password</label>
-        <p id="two" style="display: inline-block; margin-left: 5px; font-style: italic;"></p>
-        <div class="control">
-            <input type="password" name="password" id="password" class="input" required maxlength="15" minlength="8">
-        </div>
+            <div class="field">
+                <label class="label" style="display: inline-block;">Username</label>
+                <p id="one" style="display: inline-block; margin-left: 5px; font-size: 18px; color: red;">
+                </p>
+                <div class="control">
+                    <input type="text" class="input" name="username" id="username" required>
+                </div>
+            </div>
+            <br>
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <button type="button" id="check_username" class="button is-link is-light is-rounded"
+                    style="height: 50px;">
+                    <i class="fas fa-search mr-2"></i>Check username
+                </button>
+            </div>
+
+            <div class="field">
+                <label class="label" style="display: inline-block;">Password</label>
+                <p id="two" style="display: inline-block; margin-left: 5px;font-size: 18px; color: red;">
+                </p>
+                <div class="control has-icons-right">
+                    <input type="password" name="password" id="password" class="input" required maxlength="15"
+                        minlength="8">
+                    <span class="icon is-small is-right" id="toggle_password"
+                        style="cursor: pointer; pointer-events: auto;">
+                        <i class="fas fa-eye" id="eye_icon" style="color: #05668d !important;"></i>
+                    </span>
+                </div>
+            </div>
+            <br>
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <button type="submit" id="register_btn" class="button is-link is-light is-rounded"
+                    style="height: 50px;">
+                    <i class="fas fa-user-plus mr-2"></i>Register
+                </button>
+
+                <button type="button" id="cancel_btn" class="button is-link is-light is-rounded" style="height: 50px;">
+                    <i class="fas fa-arrow-left mr-2"></i>Back
+                </button>
+            </div>
+        </form>
     </div>
+    <script>
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
+        }
 
-    <button type="submit" id="register_btn" class="button is-primary">Register</button><br><br>
-    <button type="button" id="cancel_btn" class="button is-primary">Back</button>
-</form>
-</div>
-<script>
+        document.addEventListener("DOMContentLoaded", function () {
 
-    document.addEventListener("DOMContentLoaded", function() {
+            const usernameInput = document.getElementById("username");
+            const passwordInput = document.getElementById("password");
+            const checkBtn = document.getElementById("check_username");
+            const registerBtn = document.getElementById("register_btn");
+            const one = document.getElementById("one")
+            const two = document.getElementById("two")
+            const cancelBtn = document.getElementById("cancel_btn");
 
-    const usernameInput = document.getElementById("username");
-    const passwordInput = document.getElementById("password");
-    const checkBtn = document.getElementById("check_username");
-    const registerBtn = document.getElementById("register_btn");
-    const one = document.getElementById("one")
-    const two = document.getElementById("two")
-    const cancelBtn = document.getElementById("cancel_btn");
-
-    checkBtn.disabled = true;
-    registerBtn.disabled = true;
-
-    usernameInput.addEventListener("input", function() {
-        checkBtn.disabled = false;
-    });
-
-    passwordInput.addEventListener("input", function() {
-        registerBtn.disabled = false;
-    });
-
-    checkBtn.addEventListener("click", async function(event) {
-        event.preventDefault();
-        const username = usernameInput.value.trim();
-        const safeUsername = encodeURIComponent(username);
-        const data = await fetch(`/register/check_username/?username=${safeUsername}`);
-        const response = await data.json();
-        if (response.exist_username){
-            one.innerHTML = "( Username already exists )";
-            one.style.display= "inline-block";
-            one.style.color = "red";
+            checkBtn.disabled = true;
             registerBtn.disabled = true;
+
+            usernameInput.addEventListener("input", function () {
+                checkBtn.disabled = false;
+                registerBtn.disabled = true; // Disable until new username is checked
+                one.innerHTML = ""; // Clear status
+                one.style.display = "none";
+            });
+
+            passwordInput.addEventListener("input", function () {
+                // Only enable if username is already confirmed unique
+                if (one.innerHTML === "( Unique username )" && passwordInput.value.length >= 8) {
+                    registerBtn.disabled = false;
+                } else {
+                    registerBtn.disabled = true;
+                }
+            });
+
+            checkBtn.addEventListener("click", async function (event) {
+                event.preventDefault();
+                const username = usernameInput.value.trim();
+                const safeUsername = encodeURIComponent(username);
+                const data = await fetch(`/register/check_username/?username=${safeUsername}`);
+                const response = await data.json();
+                if (response.exist_username) {
+                    one.innerHTML = "( Username already exists )";
+                    one.style.display = "inline-block";
+                    one.style.color = "red";
+                    registerBtn.disabled = true;
+                }
+
+                else if (response.unique_username) {
+                    usernameInput.value = response.unique_username;
+                    one.innerHTML = "( Unique username )";
+                    one.style.display = "inline-block";
+                    one.style.color = "green";
+
+                    // Enable register button if password is already filled correctly
+                    if (passwordInput.value.length >= 8) {
+                        registerBtn.disabled = false;
+                    }
+                }
+            });
+
+            cancelBtn.addEventListener("click", function (event) {
+                window.location.href = `/`;
+            });
+
+            const togglePassword = document.getElementById("toggle_password");
+            const eyeIcon = document.getElementById("eye_icon");
+
+            togglePassword.addEventListener("click", function () {
+                const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+                passwordInput.setAttribute("type", type);
+
+                if (type === "password") {
+                    eyeIcon.classList.remove("fa-eye-slash");
+                    eyeIcon.classList.add("fa-eye");
+                } else {
+                    eyeIcon.classList.remove("fa-eye");
+                    eyeIcon.classList.add("fa-eye-slash");
+                }
+            });
+        });
+
+    </script>
+
+    <style>
+        * {
+            color-scheme: light only !important;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: white !important;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            color-scheme: light only;
+        }
+
+        input,
+        select,
+        textarea {
+            color-scheme: light !important;
+            background-color: white !important;
+        }
+
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus {
+            -webkit-box-shadow: 0 0 0 1000px white inset !important;
+            -webkit-text-fill-color: #333 !important;
+        }
+
+        .container-one {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 50px;
+            color: #DA70D6 !important;
+        }
+
+        .container-one p {
+            font-size: 60px;
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .box {
+            margin-bottom: 40px;
+            width: 600px;
+            background: white !important;
+            border-radius: 20px;
+            box-shadow: none !important;
+            border: none !important;
+            padding: 40px;
+        }
+
+        .field {
+            margin-bottom: 25px;
+        }
+
+        .label {
+            color: #023e8a !important;
+            margin-bottom: 8px;
+            font-size: 22px;
+        }
+
+        .input {
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+            padding: 12px 16px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            color: #023e8a !important;
+        }
+
+        .input:focus {
+            border-color: #05668d;
+            box-shadow: 0 0 0 3px rgba(5, 102, 141, 0.1);
+            transform: translateY(-2px);
+            color: #023e8a !important;
+        }
+
+        .input:hover {
+            border-color: #b0b0b0;
+            color: #023e8a !important;
+        }
+
+        .button {
+            width: 50%;
+            margin-bottom: 15px;
+        }
+
+        .button.is-link.is-light:disabled {
+            background-color: #eff5fb !important;
+            border-color: transparent !important;
+            opacity: 0.5;
+        }
+
+        .button.is-link.is-light:hover:not(:disabled) {
+            background-color: #d6e9f8 !important;
+            border-color: transparent !important;
+        }
+
+        .button.is-link.is-light:active:not(:disabled) {
+            background-color: #c2dff5 !important;
+            border-color: transparent !important;
+        }
+
+        #toggle_password {
+            transition: all 0.2s ease;
+        }
+
+        #toggle_password:hover {
+            transform: scale(1.1);
+        }
+
+        #eye_icon {
+            transition: color 0.2s ease;
+        }
+
+
+
+        /* Error message styling */
+        #one,
+        #two {
+            font-size: 13px;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
             }
 
-        else if (response.unique_username){
-            usernameInput.value = response.unique_username;
-            one.innerHTML = "( Unique username )";
-            one.style.display= "inline-block";
-            one.style.color = "green";
+            25% {
+                transform: translateX(-5px);
             }
-    });
 
-    cancelBtn.addEventListener("click", function(event) {
-        window.location.href = `/`;
-    });
-});
-
-</script>
-
-<style>
-    body
-    {
-        font-family: 'Poppins', sans-serif;
-    }
-    .container-one
-    {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding-top: 50px;
-        color: #DA70D6;
-    }
-    .container
-    {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    .box
-    {
-        margin-top: 20px;
-        width: 450px;
-    }
-</style>
+            75% {
+                transform: translateX(5px);
+            }
+        }
+    </style>
 
 </body>
+
 </html>

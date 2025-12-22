@@ -1,113 +1,131 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
+
 <head>
     <meta charset="UTF-8">
     <title>movie_match</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
+
 <body>
 
-<a href=" {% url 'home' %} " class="button is-info is-light home" style="margin-top: 10px; margin-left: 30px;"> <button><strong>Home</strong></button> </a>
-<div class="top_10">
-    <h1>Top_10's</h1>
-</div>
-
-{% if number < 10 %}
-<div class="other">
-    <a href="{% url 'add_movie' %}" class="button is-link is-light" style="display: inline-block;margin-top: 10px; margin-left: 20px;"> <button id="add_btn"><strong>Add more</strong></button> </a>
-    <div id="number_of_movies" style="display: inline-block">
-        <p style="display: inline-block; margin-top: 10px; margin-right: 22px;">Movie-count : <strong>{{ number }}</strong> </p>
+    <a href=" {% url 'home' %} " class="button is-info is-light is-rounded"
+        style="margin-top: 30px; margin-left: 30px; height: 50px;">
+        <i class="fas fa-home mr-2"></i><strong>Home</strong>
+    </a>
+    <div class="top_10">
+        <h1>Top_10's</h1>
     </div>
-</div>
-{% endif %}
+
+    <div class="other">
+        {% if number < 10 %} <a href="{% url 'add_movie' %}" class="button is-link is-light is-rounded"
+            style="margin-top: 10px; margin-left: 20px; height: 50px;">
+            <i class="fas fa-plus"></i>
+            </a>
+            {% else %}
+            <div></div>
+            {% endif %}
+
+            <div id="number_of_movies">
+                <p style="margin-top: 10px; margin-right: 22px; font-size: 23px;">Movie-count : <strong>{{ number }}</strong></p>
+            </div>
+    </div>
 
 
 
-{% if number == 0 %}
-<div class="empty">
-    <p>Start adding movies</p>
-</div>
-{% else %}
+    {% if number == 0 %}
+    <div class="empty">
+        <p>Start adding movies</p>
+    </div>
+    {% else %}
     {% for movie in movies %}
     <div class="columns" style="margin-top: 10px; margin-left: 10px;">
         <div class="column is-narrow" style="margin-left: 10px;">
-            <div class="box" style="width: 270px; height: 390px;">
+            <div class="box" style="width: 270px; height: 400px;">
                 {% if movie.picture_url %}
-                    <img src="https://image.tmdb.org/t/p/w200{{ movie.picture_url }}" style="width: 100%; height: 90%; border: 2px solid black;">
+                <img src="https://image.tmdb.org/t/p/w200{{ movie.picture_url }}"
+                    style="width: 100%; height: 90%; border: 2px solid black;">
                 {% else %}
                 <div class="noimage">
                     <p>No image found!</p>
                 </div>
                 {% endif %}
                 <div class="remove-container">
-                    <button class="remove-btn button is-danger is-light" id="{{ movie.id }}" style="margin-top:10px, margin-bottom:10px;">Remove</button>
+                    <button class="remove-btn button is-danger is-light is-rounded" id="{{ movie.id }}">
+                        <i class="fas fa-trash-alt mr-2"></i>Remove
+                    </button>
                 </div>
+
             </div>
+
         </div>
 
         <div class="column is-right" style="padding-bottom: 0px; margin-right: 20px;">
-        <div class="box" style="padding-bottom: 0px;">
-            <p class="title is-5" style="margin-bottom: 20px;">{{ movie.title }}</p>
+            <div class="box" style="padding-bottom: 0px;">
+                <p class="title is-5" style="margin-bottom: 20px;">{{ movie.title }}</p>
 
-            <p class="subtitle">
-                Overview :  {{ movie.overview }}</p>
+                <p class="subtitle">
+                    Overview : {{ movie.overview }}</p>
 
-            <p class="subtitle">
-                Release date :
-                {% if movie.release_date %}
+                <p class="subtitle">
+                    Release date :
+                    {% if movie.release_date %}
                     {{ movie.release_date }}
-                {% else %}
+                    {% else %}
                     No date classified
-                {% endif %}
-            </p>
+                    {% endif %}
+                </p>
 
-             <p class="subtitle">
-                Popularity :  {{ movie.popularity }}</p>
+                <p class="subtitle">
+                    Popularity : {{ movie.popularity }}</p>
 
-            <p class="subtitle" style="display: inline-block">Genre(s) :
-                {% if movie.genres %}
+                <p class="subtitle" style="display: inline-block">Genre(s) :
+                    {% if movie.genres %}
                     {% for genre in movie.genres %}
-                        <p class="subtitle genres" style="display: inline-block">{{ genre }}</p>
-                    {% endfor %}
+                <p class="subtitle genres" style="display: inline-block">{{ genre }}</p>
+                {% endfor %}
 
                 {% else %}
-                    <p class="subtitle genres" style="display: inline-block">No genre classified</p>
+                <p class="subtitle genres" style="display: inline-block">No genre classified</p>
                 {% endif %}
-            </p>
+                </p>
 
-        </div>
+            </div>
         </div>
     </div>
     {% endfor %}
-{% endif %}
+    {% endif %}
 
 </body>
 <script>
-    document.addEventListener("DOMContentLoaded", function(event) {
+    document.addEventListener("DOMContentLoaded", function (event) {
         document.querySelectorAll(".remove-btn").forEach(btn => {
             btn.addEventListener("click", () => {
                 const movie_id = btn.id;
                 remove_movie(movie_id);
             });
-         });
+        });
     });
 
     async function remove_movie(movie_id) {
-        window.location.href = `/add_movie/delete_movie/?movieId=${movie_id}` ;
+        window.location.href = `/add_movie/delete_movie/?movieId=${movie_id}`;
     }
 
 </script>
 <style>
-    body{
-         font-family: 'Poppins', sans-serif;
+    body {
+        font-family: 'Poppins', sans-serif;
     }
-    .remove-container{
+
+    .remove-container {
         display: flex;
         align-items: center;
         justify-content: center;
     }
-    .genres{
+
+    .genres {
         display: inline-block;
         padding-top: 5px;
         padding-bottom: 7px;
@@ -115,19 +133,22 @@
         border-radius: 6px;
 
     }
-    .top_10{
+
+    .top_10 {
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 50px;
     }
-    .other{
+
+    .other {
         margin-left: 10px;
         display: flex;
         justify-content: space-between;
         align-items: baseline;
     }
-    .empty{
+
+    .empty {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -135,7 +156,8 @@
         text-decoration: underline;
         font-size: 20px;
     }
-    .noimage{
+
+    .noimage {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -145,4 +167,5 @@
         margin-bottom: 280px;
     }
 </style>
+
 </html>

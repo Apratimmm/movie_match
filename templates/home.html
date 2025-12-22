@@ -1,67 +1,83 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
+
 <head>
-    <meta charset="UTF-8">
-    <title>movie_match</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>movie_match</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body>
-<div class="container-one">
+
+  <div class="container-one">
     <div>
-    <p style="font-size: 60px;">Movie_match</p>
+      <p style="font-size: 60px;">Movie_match</p>
     </div>
-</div>
-<div class="container-two" style="height: 50vh;">
+  </div>
+  <div class="container-two" style="height: 60vh;">
     <div id="csrf-token" style="display:none;">
-    {% csrf_token %}
+      {% csrf_token %}
     </div>
 
-    <a href=" {% url 'show' %} "> <button class="button is-link is-light">Top 10s</button> </a>
+    <a href=" {% url 'show' %} "> <button class="button is-link is-light is-rounded" style=" height: 50px;"><i
+          class="fas fa-list-ol mr-2"></i>
+        Top 10s</button> </a>
 
-    <a href=" {% url 'show_user_info' %} "> <button class="button is-link is-light">Your info</button> </a>
+    <a href=" {% url 'show_user_info' %} "> <button class="button is-link is-light is-rounded"
+        style="  height: 50px;"><i class="fas fa-user-circle mr-2"></i> Your info</button> </a>
 
-    <a href=" {% url 'show_other_users' %} "> <button class="button is-link is-light">Other users</button> </a>
+    <a href=" {% url 'show_other_users' %} "> <button class="button is-link is-light is-rounded"
+        style="  height: 50px;"><i class="fas fa-users mr-2"></i> Other users</button> </a>
 
-    <a href=" {% url 'find_vector' %} "> <button class="button is-link is-light">Find match</button> </a>
+    <a href=" {% url 'find_vector' %} "> <button class="button is-link is-light is-rounded" style="  height: 50px;"><i
+          class="fas fa-film mr-2"></i> Find match</button> </a>
 
-    <a href=" {% url 'login_page' %} "> <button class="button is-link is-light">Sign-in/Register</button> </a>
-</div>
+    <a href=" {% url 'login_page' %} "> <button class="button is-link is-light is-rounded" style="  height: 50px;"><i
+          class="fas fa-sign-in-alt mr-2"></i> Sign-in/Register</button> </a>
+  </div>
+  <style>
+    body,
+    html {
+      width: 100%;
+      height: 100%;
+      font-family: 'Poppins', sans-serif;
 
-
-
-
-
-<style>
-    body,html{
-        width: 100%;
-        height: 100%;
-        font-family: 'Poppins', sans-serif;
     }
 
-    .container-one{
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding-top: 50px;
-        color: #E0115F;
+    .mr-2 {
+      margin-right: 0.5rem;
     }
 
-    .container-two{
-        display: flex;
-        flex-direction: column;
-        justify-content: space-evenly;
-        align-items: center;
-        margin-top: 40px;
+    .container-one {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-top: 50px;
+      color: #DA70D6;
     }
 
-    button{
-       width: 190px;
+    .container-two {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+      align-items: center;
+      margin-top: 10px;
+      margin-bottom: 10px;
     }
-</style>
 
-
+    button {
+      width: 260px;
+    }
+  </style>
+  <div style="display: flex; justify-content: center;">
+    <div style="width: 20%; border-radius: 50px; overflow: hidden;">
+      <marquee behavior="scroll" direction="left" style=" color: #DA70D6; font-weight: 600; display: block;">
+        • pick movie(s) • find match(s) • pick movie(s) • find match(s) • pick movie(s) • find match(s) •
+      </marquee>
+    </div>
+  </div>
 </body>
 
 </html>

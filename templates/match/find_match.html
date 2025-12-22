@@ -1,30 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
+
 <head>
     <meta charset="UTF-8">
     <title>movie_match</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
+
 <body>
-<a href=" {% url 'home' %} " class="button is-info is-light" style="margin-top: 10px; margin-left: 30px;"> <button><strong>Home</strong></button> </a>
-<br>
-<br>
-<div class="simple">
-<p style="margin-left: 30px; text-decoration: underline;">The site uses your top-10 list to find people with similar taste</p><br>
-<a href=" {% url 'show_results' %} " class="button is-warning is-light" ><button>Proceed</button></a>
-</div>
+    <a href=" {% url 'home' %} " class="button is-info is-light is-rounded"
+        style="margin-top: 30px; margin-left: 30px; height: 50px;">
+        <i class="fas fa-home mr-2"></i><strong>Home</strong>
+    </a>
+    <br>
+    <br>
+    <div class="simple">
+        <p style="margin-left: 30px; text-decoration: underline;">The site uses your top-10 list to find people with
+            similar taste</p><br>
+        <a href=" {% url 'show_results' %} " class="button is-warning is-light is-rounded"
+            style="height: 50px; width: 200px;">
+            <i class="fas fa-search mr-2"></i><strong>Proceed</strong>
+        </a>
+    </div>
 
 </body>
 <style>
-    body{
-         font-family: 'Poppins', sans-serif;
+    body {
+        font-family: 'Poppins', sans-serif;
     }
-    .simple{
+
+    .simple {
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
     }
 </style>
+
 </html>
