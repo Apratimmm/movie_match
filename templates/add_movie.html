@@ -1,235 +1,326 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>movie_match</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Movie_match - Search Movies</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#FF4D8C",
+                        secondary: "#6366F1",
+                        "text-main": "#1F2937",
+                        "text-muted": "#9CA3AF",
+                        accent: "#FA7921",
+                        "accent-hover": "#E16A1A",
+                        success: "#0CD498",
+                        "success-hover": "#0BBE87",
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+    </style>
 </head>
 
-<body onload="setmovie()">
+<body class="bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen font-sans" onload="setmovie()">
+    <!-- Navigation -->
+    <div class="flex gap-3 p-6">
+        <a href="{% url 'show' %}"
+            class="inline-flex items-center gap-2 px-4 py-2 bg-white hover:bg-gray-50 text-gray-700 font-semibold rounded-xl shadow-sm border border-gray-200 transition-all hover:scale-105">
+            <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+            <span>Back</span>
+        </a>
+        <a href="{% url 'home' %}"
+            class="inline-flex items-center gap-2 px-4 py-2 bg-white hover:bg-gray-50 text-gray-700 font-semibold rounded-xl shadow-sm border border-gray-200 transition-all hover:scale-105">
+            <span class="material-symbols-outlined text-[20px]">home</span>
+            <span>Home</span>
+        </a>
+    </div>
 
-    <a href=" {% url 'show' %} " class="button is-info is-light is-rounded"
-        style="margin-top: 30px; margin-left: 30px; height: 50px;">
-        <i class="fas fa-arrow-left mr-2"></i><strong>Back</strong>
-    </a>
-    <a href=" {% url 'home' %} " class="button is-info is-light is-rounded"
-        style="margin-top: 30px; margin-left: 15px; height: 50px;">
-        <i class="fas fa-home mr-2"></i><strong>Home</strong>
-    </a>
-
-    <div class="level-item" style="margin-top: 30px; display: flex; justify-content: center;">
-        <div class="field has-addons" style="width: 25%;">
-            <p class="control is-expanded">
-                <input type="text" class="input is-rounded" placeholder="Enter movie name" id="movie_name"
-                    style="border-top-right-radius: 0; border-bottom-right-radius: 0; height: 45px;">
-            </p>
-            <p class="control">
-                <button class="button is-rounded" id="search_button"
-                    style="border-top-left-radius: 0; border-bottom-left-radius: 0; height: 45px;">
-                    <i class="fas fa-search mr-2"></i>Search
+    <div class="max-w-7xl mx-auto px-6">
+        <!-- Search Section -->
+        <div class="max-w-2xl mx-auto mb-12">
+            <h1 class="text-3xl font-bold text-center text-text-main mb-8">
+                Search <span class="text-primary">Movies</span>
+            </h1>
+            <div class="flex gap-2">
+                <input type="text" id="movie_name" placeholder="Enter movie name"
+                    class="flex-1 px-6 py-4 bg-white border border-gray-200 rounded-2xl shadow-sm focus:ring-2 focus:ring-primary/20 focus:border-primary focus:outline-none text-lg transition-all" />
+                <button id="search_button"
+                    class="px-8 py-4 bg-accent hover:bg-accent-hover text-white font-bold rounded-2xl shadow-lg shadow-orange-100 transition-all hover:scale-105 active:scale-95 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[24px]">search</span>
+                    <span>Search</span>
                 </button>
-            </p>
+            </div>
             <div id="csrf-token" style="display:none;">
                 {% csrf_token %}
             </div>
         </div>
+
+        <!-- Messages -->
+        {% if message %}
+        <div class="text-center py-20">
+            <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span class="material-symbols-outlined text-5xl text-gray-400">search_off</span>
+            </div>
+            <h2 class="text-2xl font-bold text-text-main">No movie found!</h2>
+            <p class="text-text-muted mt-2">Try searching with a different name</p>
+        </div>
+        {% endif %}
+
+        <!-- Movie Results -->
+        <div class="space-y-6 pb-20">
+            {% for movie in movies %}
+            <div
+                class="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100">
+                <div class="flex flex-col md:flex-row">
+                    <!-- Movie Poster -->
+                    <div class="md:w-64 flex-shrink-0 bg-gray-100 relative">
+                        {% if movie.picture_url %}
+                        <img src="https://image.tmdb.org/t/p/w200{{ movie.picture_url }}" alt="{{ movie.title }}"
+                            class="w-full h-full object-cover" />
+                        {% else %}
+                        <div class="w-full h-96 flex items-center justify-center">
+                            <div class="text-center">
+                                <span
+                                    class="material-symbols-outlined text-6xl text-gray-300">image_not_supported</span>
+                                <p class="text-gray-400 mt-2">No image found</p>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <!-- Add Button Overlay -->
+                        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 w-full px-4">
+                            {{ movie|json_script:movie.id }}
+                            <button
+                                class="top10-btn w-full py-3 bg-success hover:bg-success-hover text-white font-bold rounded-xl shadow-lg transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+                                id="{{ movie.id }}">
+                                <span class="material-symbols-outlined text-[20px]">add</span>
+                                <span>Top 10</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Movie Details -->
+                    <div class="flex-1 p-8">
+                        <h2 class="text-2xl font-bold text-text-main mb-4">{{ movie.title }}</h2>
+
+                        <div class="space-y-4">
+                            <div>
+                                <p class="text-sm font-semibold text-text-muted uppercase tracking-wider mb-1">Overview
+                                </p>
+                                <p class="text-gray-700 leading-relaxed">{{ movie.overview }}</p>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div>
+                                    <p class="text-sm font-semibold text-text-muted uppercase tracking-wider mb-1">
+                                        Release Date</p>
+                                    <p class="text-gray-700 font-medium">
+                                        {% if movie.release_date %}
+                                        {{ movie.release_date }}
+                                        {% else %}
+                                        No date classified
+                                        {% endif %}
+                                    </p>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-semibold text-text-muted uppercase tracking-wider mb-1">
+                                        Popularity</p>
+                                    <p class="text-gray-700 font-medium">{{ movie.popularity }}</p>
+                                </div>
+                            </div>
+
+                            <div>
+                                <p class="text-sm font-semibold text-text-muted uppercase tracking-wider mb-2">Genre(s)
+                                </p>
+                                <div class="flex flex-wrap gap-2">
+                                    {% if movie.genres %}
+                                    {% for genre in movie.genres %}
+                                    <span
+                                        class="px-3 py-1 bg-purple-50 text-secondary border border-purple-100 rounded-full text-sm font-medium">
+                                        {{ genre }}
+                                    </span>
+                                    {% endfor %}
+                                    {% else %}
+                                    <span
+                                        class="px-3 py-1 bg-gray-100 text-gray-400 border border-gray-100 rounded-full text-sm">
+                                        No genre classified
+                                    </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
     </div>
 
-    <div style="margin-top: 10px; display: flex; align-items: center; justify-content: center;">
-        <div>
-            {% if message %}
-            <br><br>
-            <h1 style="font-size: 30px;">
-                No movie found!
-            </h1>
+    <!-- Custom Modal -->
+    <div id="customModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+        <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity"></div>
+        <div class="relative bg-white rounded-3xl shadow-2xl max-w-sm w-full p-8 transform transition-all scale-95 opacity-0 duration-300"
+            id="modalContent">
+            <div class="text-center">
+                <div class="mx-auto flex items-center justify-center h-20 w-20 rounded-full mb-6"
+                    id="modalIconContainer">
+                    <span class="material-symbols-outlined text-4xl" id="modalIcon">info</span>
+                </div>
+                <h3 class="text-2xl font-bold text-text-main mb-2" id="modalTitle">Notification</h3>
+                <p class="text-text-muted mb-8" id="modalMessage">Something happened.</p>
+                <button onclick="closeModal()"
+                    class="w-full py-4 bg-gray-900 hover:bg-black text-white font-bold rounded-2xl shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98]">
+                    Got it
+                </button>
+            </div>
+        </div>
+    </div>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function (event) {
+            const search_button = document.getElementById("search_button");
+            const movie_input = document.getElementById("movie_name");
+
+            search_button.onclick = function () {
+                performSearch();
+            };
+
+            movie_input.addEventListener("keypress", function (event) {
+                if (event.key === "Enter") {
+                    performSearch();
+                }
+            });
+
+            function performSearch() {
+                const movie = movie_input.value.trim();
+                const movie_name = encodeURIComponent(movie);
+                if (movie_name) {
+                    window.location.href = `/add_movie/search/?moviename=${movie_name}`;
+                }
+            }
+
+            document.querySelectorAll(".top10-btn").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const movieId = btn.id;
+                    const movie = JSON.parse(document.getElementById(movieId).textContent);
+                    set_top10(movie, btn);
+                });
+            });
+        });
+
+        function setmovie() {
+            {% if user_input %}
+            const movie_name = document.getElementById("movie_name");
+            movie_name.value = "{{ user_input }}";
             {% endif %}
-        </div>
-    </div>
-    {% for movie in movies %}
-    <div class="columns" style="margin-top: 10px; margin-left: 10px;">
-        <div class="column is-narrow" style="margin-left: 10px;">
-            <div class="box" style="width: 270px; height: 400px;">
-                {% if movie.picture_url %}
-                <img src="https://image.tmdb.org/t/p/w200{{ movie.picture_url }}"
-                    style="width: 100%; height: 90%; border: 2px solid black;">
-                {% else %}
-                <div class="noimage">
-                    <p>No image found!</p>
-                </div>
-                {% endif %}
-                <div class="remove-container">
-                    {{ movie|json_script:movie.id }}
-                    <button class="top10-btn remove-btn button is-success is-light is-rounded" id="{{ movie.id }}">
-                        <i class="fas fa-plus mr-2"></i>Top 10
-                    </button>
-                </div>
-            </div>
-        </div>
+        };
 
-        <div class="column is-right" style="padding-bottom: 0px;">
-            <div class="box" style="padding-bottom: 0px;">
-                <p class="title is-5" style="margin-bottom: 20px;">{{ movie.title }}</p>
+        const modal = document.getElementById('customModal');
+        const modalContent = document.getElementById('modalContent');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalMessage = document.getElementById('modalMessage');
+        const modalIcon = document.getElementById('modalIcon');
+        const modalIconContainer = document.getElementById('modalIconContainer');
 
-                <p class="subtitle">
-                    Overview : {{ movie.overview }}</p>
+        function showModal(title, message, type = 'info') {
+            modalTitle.innerText = title;
+            modalMessage.innerText = message;
+            modalIconContainer.className = "mx-auto flex items-center justify-center h-20 w-20 rounded-full mb-6";
+            if (type === 'warning') {
+                modalIcon.innerText = 'warning';
+                modalIconContainer.classList.add('bg-orange-100', 'text-orange-600');
+            } else if (type === 'error') {
+                modalIcon.innerText = 'error';
+                modalIconContainer.classList.add('bg-red-100', 'text-red-600');
+            } else {
+                modalIcon.innerText = 'check_circle';
+                modalIconContainer.classList.add('bg-green-100', 'text-green-600');
+            }
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modalContent.classList.remove('scale-95', 'opacity-0');
+                modalContent.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
 
-                <p class="subtitle">
-                    Release date :
-                    {% if movie.release_date %}
-                    {{ movie.release_date }}
-                    {% else %}
-                    No date classified
-                    {% endif %}
-                </p>
+        function closeModal() {
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
 
-                <p class="subtitle">
-                    Popularity : {{ movie.popularity }}</p>
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== "") {
+                const cookies = document.cookie.split(";");
+                for (let cookie of cookies) {
+                    const c = cookie.trim();
+                    if (c.startsWith(name + "=")) {
+                        cookieValue = decodeURIComponent(c.substring(name.length + 1));
+                    }
+                }
+            }
+            return cookieValue;
+        }
 
-                <p class="subtitle" style="display: inline-block">Genre(s) :
-                    {% if movie.genres %}
-                    {% for genre in movie.genres %}
-                <p class="subtitle genres" style="display: inline-block">{{ genre }}</p>
-                {% endfor %}
+        async function set_top10(movie, button) {
+            try {
+                const result = await fetch(`/add_movie/actually_add/`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": getCookie("csrftoken"),
+                        "Accept": "application/json"
+                    },
+                    body: JSON.stringify(movie)
+                });
+                const message = await result.json();
 
-                {% else %}
-                <p class="subtitle genres" style="display: inline-block">No genre classified</p>
-                {% endif %}
-                </p>
+                if (message.message == 'enough') {
+                    showModal('List Full', 'Your Top 10 list is already full!', 'warning');
+                } else if (message.message == 'no') {
+                    showModal('Already Exists', 'This movie is already in your Top 10 list!', 'info');
+                    setAddedState(button);
+                } else {
+                    setAddedState(button);
+                }
+            } catch (error) {
+                console.error("Error adding movie:", error);
+                showModal('Error', 'Failed to add movie. Please try again.', 'error');
+            }
+        }
 
-            </div>
-        </div>
-    </div>
-
-
-    {% endfor %}
-
-
+        function setAddedState(button) {
+            button.disabled = true;
+            button.classList.remove('bg-success', 'hover:bg-success-hover');
+            button.classList.add('bg-gray-400');
+            button.innerHTML = '<span class="material-symbols-outlined">check</span> <span>Added</span>';
+        }
+    </script>
 </body>
 
 </html>
-<script>
-    document.addEventListener("DOMContentLoaded", function (event) {
-        const search_button = document.getElementById("search_button");
-
-        search_button.onclick = function () {
-            const movie = document.getElementById("movie_name").value.trim();
-            const movie_name = encodeURIComponent(movie);
-            window.location.href = `/add_movie/search/?moviename=${movie_name}`;
-        };
-
-    });
-
-    function setmovie() {
-        {% if user_input %}
-        const movie_name = document.getElementById("movie_name");
-        movie_name.value = "{{ user_input }}";
-        {% endif %}
-    };
-
-    document.querySelectorAll(".top10-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-            const movieId = btn.id;
-            const movie = JSON.parse(
-                document.getElementById(movieId).textContent);
-            set_top10(movie, btn);
-        });
-    });
-
-
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== "") {
-            const cookies = document.cookie.split(";");
-            for (let cookie of cookies) {
-                const c = cookie.trim();
-                if (c.startsWith(name + "=")) {
-                    cookieValue = decodeURIComponent(c.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-
-    const csrftoken = getCookie("csrftoken");
-
-    async function set_top10(movie, button) {
-        const result = await fetch(`/add_movie/actually_add/`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": csrftoken,
-                "Accept": "application/json"
-            },
-            body: JSON.stringify(movie)
-        });
-        const message = await result.json();
-        button.disabled = true;
-
-        if (message.message == 'enough') {
-            alert('list is full');
-        }
-
-        else if (message.message == 'no') {
-            alert('movie already exists in the list');
-            button.innerHTML = 'Added';
-        }
-
-        else {
-            button.innerHTML = 'Added';
-        }
-    }
-
-
-</script>
-
-<style>
-    body {
-        font-family: 'Poppins', sans-serif;
-    }
-
-    .remove-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .genres {
-        display: inline-block;
-
-        padding-top: 5px;
-        padding-bottom: 7px;
-        padding-left: 15px;
-
-        border-radius: 6px;
-
-    }
-
-    .top_10 {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 50px;
-    }
-
-    .other {
-        margin-left: 10px;
-        display: flex;
-        justify-content: space-between;
-        align-items: baseline;
-    }
-
-    .noimage {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-top: 10px;
-        text-decoration: underline;
-        font-size: 20px;
-        margin-bottom: 280px;
-    }
-</style>

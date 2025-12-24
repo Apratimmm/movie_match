@@ -1,259 +1,208 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="color-scheme" content="light only">
-    <title>movie_match</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Movie_match Login</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#FF4D8C", // Vibrant pink for branding
+                        secondary: "#6366F1", // Indigo accent
+                        "text-main": "#1F2937",
+                        "text-muted": "#9CA3AF",
+                        "input-bg": "#F9FAFB",
+                        "input-border": "#E5E7EB",
+                        "btn-light": "#F3F4F6",
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        DEFAULT: "12px",
+                        "xl": "16px",
+                        "2xl": "24px",
+                        "3xl": "32px",
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'glow': '0 0 15px rgba(255, 77, 140, 0.3)',
+                    }
+                },
+            },
+        };
+    </script>
+    <style>
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+    </style>
 </head>
 
-<body>
-    <div class="container-one">
-        <div>
-            <p style="font-size: 60px;">Movie_match</p>
+<body class="bg-white font-sans min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden">
+    <!-- Background gradient blobs -->
+    <div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+        <div class="absolute top-[-15%] right-[-5%] w-[500px] h-[500px] bg-blue-50/50 rounded-full blur-[100px]"></div>
+        <div class="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-pink-50/60 rounded-full blur-[80px]">
         </div>
     </div>
-    <div class="container">
-        <form method="POST" action="{% url 'actual_login' %}" class="box">
-            <div class="field">
-                <label class="label" style="display: inline-block;">Username</label>
-                <p id="one"
-                    style="display: inline-block; margin-left: 5px; font-style: italic; font-size: 18px; color: red;">
-                </p>
-                <div class="control">
-                    <input class="input" type="text" id="username_input" name="username_input" required>
+
+    <div class="w-full max-w-[340px] flex flex-col space-y-10">
+        <!-- Header -->
+        <div class="text-center space-y-2">
+            <div
+                class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-tr from-primary to-purple-500 rounded-2xl shadow-glow mb-4 text-white">
+                <span class="material-symbols-outlined text-4xl">movie_filter</span>
+            </div>
+            <h1 class="text-4xl font-bold text-text-main tracking-tight">
+                Movie<span class="text-primary">_</span>match
+            </h1>
+            <div class="flex justify-center w-full">
+                <div class="w-3/4 rounded-full overflow-hidden">
+                    <marquee behavior="scroll" direction="left" class="text-primary font-semibold text-sm block" style="margin-top:5px;">
+                        • pick movie(s) • find match(s) • pick movie(s) • find match(s) • pick movie(s) • find match(s)
+                        •
+                    </marquee>
                 </div>
             </div>
+        </div>
 
-            <div class="field">
-                <label class="label" style="display: inline-block;">Password</label>
-                <p id="two"
-                    style="display: inline-block; margin-left: 5px; font-style: italic;font-size: 18px; color: red;">
-                </p>
-                <div class="control has-icons-right">
-                    <input class="input" type="password" id="password_input" name="password_input" required>
-                    <span class="icon is-small is-right" id="toggle_password"
-                        style="cursor: pointer; pointer-events: auto;">
-                        <i class="fas fa-eye" id="eye_icon" style="color: #05668d !important;"></i>
+        <!-- Login Form -->
+        <form method="POST" action="{% url 'actual_login' %}" class="flex flex-col space-y-5">
+            {% csrf_token %}
+
+            <!-- Username Field -->
+            <div class="space-y-1.5">
+                <div class="flex items-center gap-2 ml-1">
+                    <label class="block text-sm font-semibold text-text-main uppercase tracking-wide opacity-80"
+                        for="username_input">
+                        Username
+                    </label>
+                    <p id="error_username" class="text-xs text-red-500 hidden"></p>
+                </div>
+                <div class="relative group">
+                    <span
+                        class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors">
+                        <span class="material-symbols-outlined text-[20px]" style="margin-top:7px;">person</span>
                     </span>
+                    <input
+                        class="w-full h-12 pl-11 pr-4 bg-input-bg border border-input-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/10 focus:outline-none text-gray-800 text-base transition-all placeholder-gray-400 hover:border-gray-300"
+                        id="username_input" name="username_input" placeholder="Enter your username" type="text"
+                        required />
                 </div>
             </div>
-            <br>
-            <div style="display: flex; flex-direction: column; align-items: center;">
-                <button type="submit" class="button is-link is-light is-rounded" id="submit" style="height: 50px;">
-                    <i class="fas fa-sign-in-alt mr-2"></i>Log-in
-                </button>
-                {% csrf_token %}
 
-                <a href="{% url 'register' %}" class="button is-link is-light is-rounded" style="height: 50px;">
-                    <i class="fas fa-user-plus mr-2"></i>Register
+            <!-- Password Field -->
+            <div class="space-y-1.5">
+                <div class="flex justify-between items-center ml-1">
+                    <div class="flex items-center gap-2">
+                        <label class="block text-sm font-semibold text-text-main uppercase tracking-wide opacity-80"
+                            for="password_input">
+                            Password
+                        </label>
+                        <p id="error_password" class="text-xs text-red-500 hidden"></p>
+                    </div>
+                </div>
+                <div class="relative group">
+                    <span
+                        class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors">
+                        <span class="material-symbols-outlined text-[20px]" style="margin-top:7px;">lock</span>
+                    </span>
+                    <input
+                        class="w-full h-12 pl-11 pr-12 bg-input-bg border border-input-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/10 focus:outline-none text-gray-800 text-base transition-all placeholder-gray-400 hover:border-gray-300"
+                        id="password_input" name="password_input" placeholder="Enter your password" type="password"
+                        required />
+                    <button aria-label="Toggle password visibility"
+                        class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors focus:outline-none cursor-pointer p-1"
+                        type="button" id="toggle_password">
+                        <span class="material-symbols-outlined text-[20px]" id="eye_icon"
+                            style="margin-top:9px;">visibility</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="pt-6 space-y-3 flex flex-col items-center w-full">
+                <button
+                    class="w-full h-14 flex items-center justify-center space-x-2 bg-gradient-to-r from-gray-900 to-gray-800 hover:from-black hover:to-gray-900 text-white font-semibold rounded-2xl shadow-lg shadow-gray-200 transition-all transform active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+                    type="submit" id="submit">
+                    <span>Log In</span>
+                    <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+                </button>
+                <a href="{% url 'register' %}"
+                    class="w-full h-14 flex items-center justify-center space-x-2 bg-white border-2 border-gray-100 hover:bg-gray-50 hover:border-gray-200 text-gray-700 font-semibold rounded-2xl transition-all transform active:scale-[0.98]">
+                    <span>Register</span>
+                    <span class="material-symbols-outlined text-[20px] text-primary">add_circle</span>
                 </a>
             </div>
         </form>
     </div>
+
     <script>
+        // Prevent form resubmission
         if (window.history.replaceState) {
             window.history.replaceState(null, null, window.location.href);
         }
+
         document.addEventListener("DOMContentLoaded", function () {
             const submit = document.getElementById("submit");
-            const one = document.getElementById("one");
-            const two = document.getElementById("two");
-            const username_input = document.getElementById("username_input");
-            const password_input = document.getElementById("password_input");
-
-            submit.disabled = true;
-            {% if error1 %}
-            password_input.value = "{{ error1 }}";
-            one.innerHTML = "( Username not found! )";
-            one.style.display = "inline-block";
-            {% elif error2 %}
-            username_input.value = "{{error2}}";
-            two.innerHTML = "( Password doesn't match! )";
-            two.style.display = "inline-block";
-            {% endif %}
-
-            username_input.addEventListener("input", function () {
-                one.style.display = "none";
-            });
-
-            username_input.addEventListener("input", function () {
-                submit.disabled = false;
-            });
-
-            password_input.addEventListener("input", function () {
-                submit.disabled = false;
-            });
-
-
+            const errorUsername = document.getElementById("error_username");
+            const errorPassword = document.getElementById("error_password");
+            const usernameInput = document.getElementById("username_input");
+            const passwordInput = document.getElementById("password_input");
             const togglePassword = document.getElementById("toggle_password");
             const eyeIcon = document.getElementById("eye_icon");
 
+            // Initially disable submit button
+            submit.disabled = true;
+
+            // Handle Django error messages
+            {% if error1 %}
+            passwordInput.value = "{{ error1 }}";
+            errorUsername.innerHTML = "Username not found!";
+            errorUsername.classList.remove("hidden");
+            {% elif error2 %}
+            usernameInput.value = "{{error2}}";
+            errorPassword.innerHTML = "Password doesn't match!";
+            errorPassword.classList.remove("hidden");
+            {% endif %}
+
+            // Clear error messages on input
+            usernameInput.addEventListener("input", function () {
+                errorUsername.classList.add("hidden");
+                submit.disabled = false;
+            });
+
+            passwordInput.addEventListener("input", function () {
+                errorPassword.classList.add("hidden");
+                submit.disabled = false;
+            });
+
+            // Password visibility toggle
             togglePassword.addEventListener("click", function () {
-                const type = password_input.getAttribute("type") === "password" ? "text" : "password";
-                password_input.setAttribute("type", type);
+                const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+                passwordInput.setAttribute("type", type);
 
                 if (type === "password") {
-                    eyeIcon.classList.remove("fa-eye-slash");
-                    eyeIcon.classList.add("fa-eye");
+                    eyeIcon.textContent = "visibility";
                 } else {
-                    eyeIcon.classList.remove("fa-eye");
-                    eyeIcon.classList.add("fa-eye-slash");
+                    eyeIcon.textContent = "visibility_off";
                 }
             });
         });
     </script>
-    <style>
-        * {
-            color-scheme: light only !important;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: white !important;
-            min-height: 100vh;
-            margin: 0;
-            padding: 0;
-            color-scheme: light only;
-        }
-
-        /* Force light mode on all inputs and form elements */
-        input,
-        select,
-        textarea {
-            color-scheme: light !important;
-            background-color: white !important;
-        }
-
-        input:-webkit-autofill,
-        input:-webkit-autofill:hover,
-        input:-webkit-autofill:focus {
-            -webkit-box-shadow: 0 0 0 1000px white inset !important;
-            -webkit-text-fill-color: #333 !important;
-        }
-
-        .container-one {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding-top: 50px;
-            color: #DA70D6 !important;
-        }
-
-        .container-one p {
-            font-size: 60px;
-            margin: 0;
-        }
-
-        .container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .box {
-            margin-top: 0px;
-            margin-bottom: 40px;
-            width: 600px;
-            background: white !important;
-            border-radius: 20px;
-            box-shadow: none !important;
-            border: none !important;
-            padding: 40px;
-        }
-
-        .field {
-            margin-bottom: 25px;
-        }
-
-        .label {
-            color: #023e8a !important;
-            margin-bottom: 8px;
-            font-size: 22px;
-        }
-
-        .input {
-            border-radius: 10px;
-            border: 2px solid #e0e0e0;
-            padding: 12px 16px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            color: #023e8a !important;
-        }
-
-        .input:focus {
-            border-color: #05668d;
-            box-shadow: 0 0 0 3px rgba(5, 102, 141, 0.1);
-            transform: translateY(-2px);
-            color: #023e8a !important;
-        }
-
-        .input:hover {
-            border-color: #b0b0b0;
-            color: #023e8a !important;
-        }
-
-        .button {
-            width: 50%;
-            margin-bottom: 15px;
-        }
-
-        .button.is-link.is-light:disabled {
-            background-color: #eff5fb !important;
-            border-color: transparent !important;
-            opacity: 0.5;
-        }
-
-        .button.is-link.is-light:hover:not(:disabled) {
-            background-color: #d6e9f8 !important;
-            border-color: transparent !important;
-        }
-
-        .button.is-link.is-light:active:not(:disabled) {
-            background-color: #c2dff5 !important;
-            border-color: transparent !important;
-        }
-
-        #toggle_password {
-            transition: all 0.2s ease;
-        }
-
-        #toggle_password:hover {
-            transform: scale(1.1);
-        }
-
-        #eye_icon {
-            transition: color 0.2s ease;
-        }
-
-
-
-        /* Error message styling */
-        #one,
-        #two {
-            font-size: 13px;
-            animation: shake 0.5s ease;
-        }
-
-        @keyframes shake {
-
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-
-            25% {
-                transform: translateX(-5px);
-            }
-
-            75% {
-                transform: translateX(5px);
-            }
-        }
-    </style>
 </body>
 
 </html>

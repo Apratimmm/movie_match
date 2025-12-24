@@ -1,44 +1,121 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>movie_match</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Movie_match - Your Info</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#FF4D8C",
+                        secondary: "#6366F1",
+                        "text-main": "#1F2937",
+                        "text-muted": "#9CA3AF",
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+    </style>
 </head>
 
-<body>
-    <a href=" {% url 'home' %} " class="button is-info is-light is-rounded"
-        style="margin-top: 30px; margin-left: 30px; height: 50px;">
-        <i class="fas fa-home mr-2"></i><strong>Home</strong>
-    </a>
-    <br><br>
-    <p style="margin-left: 30px; text-decoration: underline;">The values are dependent on the movies in your top-10s!
-    </p>
-    <br>
+<body class="bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen font-sans">
+    <!-- Navigation -->
+    <div class="p-6">
+        <a href="{% url 'home' %}"
+            class="inline-flex items-center gap-2 px-4 py-2 bg-white hover:bg-gray-50 text-gray-700 font-semibold rounded-xl shadow-sm border border-gray-200 transition-all hover:scale-105">
+            <span class="material-symbols-outlined text-[20px]">home</span>
+            <span>Home</span>
+        </a>
+    </div>
 
-    <div class="container is-flex is-justify-content-center" style="margin-bottom: 30px;">
-        <div style="width: 300px; height: 300px;">
-            <canvas id="genreChart"></canvas>
+    <!-- Main Content -->
+    <div class="max-w-5xl mx-auto px-6 pb-10">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-text-main mb-3">
+                Your <span class="text-primary">Genre</span> Insights
+            </h1>
+            <p class="text-text-muted flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-[20px]">info</span>
+                <span>Based on the movies in your top 10s</span>
+            </p>
+        </div>
+
+        <!-- Chart and Stats Container -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Pie Chart -->
+            <div class="bg-white rounded-2xl shadow-lg p-8 border border-gray-100" style="height: 75%">
+                <h2 class="text-xl font-bold text-text-main mb-6 text-center">Genre Distribution</h2>
+                <div class="flex items-center justify-center">
+                    <div class="w-72 h-72">
+                        <canvas id="genreChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Genre Breakdown -->
+            <div class="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
+                <h2 class="text-xl font-bold text-text-main mb-6">Genre Breakdown</h2>
+                <div class="space-y-4">
+                    {% for genre, count in info.items %}
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-4 h-4 rounded-full genre-indicator" data-index="{{ forloop.counter0 }}">
+                                </div>
+                                <span class="font-semibold text-text-main">{{ genre }}</span>
+                            </div>
+                            <span class="text-lg font-bold text-primary">{{ count }}%</span>
+                        </div>
+                        <div class="relative w-full h-3 bg-gray-100 rounded-full overflow-hidden">
+                            <div class="genre-bar h-full rounded-full transition-all duration-500 ease-out"
+                                data-index="{{ forloop.counter0 }}" style="width: {{ count }}%"></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional Info Card -->
+        <div class="mt-8 bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-6 border border-purple-100">
+            <div class="flex items-start gap-4">
+                <div class="flex-shrink-0">
+                    <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm">
+                        <span class="material-symbols-outlined text-2xl text-primary">lightbulb</span>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-bold text-text-main mb-1">Discover Your Taste</h3>
+                    <p class="text-sm text-text-muted">
+                        Your genre preferences are calculated based on your top 10 movies. Add more movies to get more
+                        accurate insights!
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
-    <br>
-    {% for genre, count in info.items %}
-    <div class="status">
-        <div>
-            <strong>
-                <p>{{ genre }} : {{ count }}%</p>
-            </strong>
-        </div>
-        <div style="width: 60%;">
-            <progress class="progress is-small genre-progress" style="height: 20px;" value="{{ count }}" max="100"
-                data-index="{{ forloop.counter0 }}"></progress><br>
-        </div>
-    </div>
-    {% endfor %}
 
     <script>
         const colors = [
@@ -46,12 +123,15 @@
             '#9966FF', '#FF9F40', '#C9CBCF', '#7BC225', '#B33E3E'
         ];
 
+        // Create Pie Chart
         const ctx = document.getElementById('genreChart').getContext('2d');
         const data = {
-            datasets: [{
-                data: [{% for count in info.values %}{{ count }}{% if not forloop.last %}, {% endif %} {% endfor %}],
+            labels: [{% for genre in info.keys %}'{{ genre }}'{% if not forloop.last %}, {% endif %} {% endfor %}],
+        datasets: [{
+            data: [{% for count in info.values %}{{ count }}{% if not forloop.last %}, {% endif %} {% endfor %}],
         backgroundColor: colors,
-            hoverOffset: 13
+            borderWidth: 0,
+                hoverOffset: 15
             }]
         };
 
@@ -60,13 +140,27 @@
             data: data,
             options: {
                 responsive: true,
-                maintainAspectRatio: false,
+                maintainAspectRatio: true,
                 plugins: {
                     legend: {
                         display: false
                     },
                     tooltip: {
-                        enabled: false
+                        enabled: true,
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        padding: 12,
+                        titleFont: {
+                            size: 14,
+                            weight: 'bold'
+                        },
+                        bodyFont: {
+                            size: 13
+                        },
+                        callbacks: {
+                            label: function (context) {
+                                return context.label + ': ' + context.parsed + '%';
+                            }
+                        }
                     }
                 }
             }
@@ -74,41 +168,17 @@
 
         new Chart(ctx, config);
 
-        document.querySelectorAll('.genre-progress').forEach(progress => {
-            const index = progress.dataset.index % colors.length;
-            const color = colors[index];
-            progress.style.setProperty('--progress-color', color);
-            progress.style.color = color;
+        // Color the progress bars and indicators
+        document.querySelectorAll('.genre-bar').forEach(bar => {
+            const index = parseInt(bar.dataset.index) % colors.length;
+            bar.style.backgroundColor = colors[index];
+        });
+
+        document.querySelectorAll('.genre-indicator').forEach(indicator => {
+            const index = parseInt(indicator.dataset.index) % colors.length;
+            indicator.style.backgroundColor = colors[index];
         });
     </script>
-
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .status {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .genre-progress::-webkit-progress-value {
-            background-color: var(--progress-color) !important;
-            transition: width 0.5s ease;
-        }
-
-        .genre-progress::-moz-progress-bar {
-            background-color: var(--progress-color) !important;
-        }
-
-        .genre-progress {
-            background-color: #ededed;
-            /* Track color */
-        }
-    </style>
-
 </body>
 
 </html>

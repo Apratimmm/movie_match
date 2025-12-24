@@ -1,298 +1,252 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="color-scheme" content="light only">
-    <title>movie_match</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Movie_match Register</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#FF4D8C", // Vibrant pink for branding
+                        secondary: "#6366F1", // Indigo accent
+                        "text-main": "#1F2937",
+                        "text-muted": "#9CA3AF",
+                        "input-bg": "#F9FAFB",
+                        "input-border": "#E5E7EB",
+                        "btn-light": "#F3F4F6",
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        DEFAULT: "12px",
+                        "xl": "16px",
+                        "2xl": "24px",
+                        "3xl": "32px",
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'glow': '0 0 15px rgba(255, 77, 140, 0.3)',
+                    }
+                },
+            },
+        };
+    </script>
+    <style>
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+    </style>
 </head>
 
-<body>
-
-    <div class="container-one">
-        <div>
-            <p style="font-size: 60px;">Movie_match</p>
+<body class="bg-white font-sans min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden">
+    <!-- Background gradient blobs -->
+    <div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+        <div class="absolute top-[-15%] right-[-5%] w-[500px] h-[500px] bg-blue-50/50 rounded-full blur-[100px]"></div>
+        <div class="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-pink-50/60 rounded-full blur-[80px]">
         </div>
     </div>
-    <div class="container">
-        <form method="post" action="{% url 'add' %}" class="box">
+
+    <div class="w-full max-w-[340px] flex flex-col space-y-10">
+        <!-- Header -->
+        <div class="text-center space-y-2">
+            <div
+                class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-tr from-primary to-purple-500 rounded-2xl shadow-glow mb-4 text-white">
+                <span class="material-symbols-outlined text-4xl">movie_filter</span>
+            </div>
+            <h1 class="text-4xl font-bold text-text-main tracking-tight">
+                Movie<span class="text-primary">_</span>match
+            </h1>
+            <div class="flex justify-center w-full">
+                <div class="w-3/4 rounded-full overflow-hidden">
+                    <marquee behavior="scroll" direction="left" class="text-primary font-semibold text-sm block">
+                        • pick movie(s) • find match(s) • pick movie(s) • find match(s) • pick movie(s) • find match(s)
+                        •
+                    </marquee>
+                </div>
+            </div>
+        </div>
+
+        <!-- Register Form -->
+        <form method="POST" action="{% url 'add' %}" class="flex flex-col space-y-5">
             {% csrf_token %}
 
-            <div class="field">
-                <label class="label" style="display: inline-block;">Username</label>
-                <p id="one" style="display: inline-block; margin-left: 5px; font-size: 18px; color: red;">
-                </p>
-                <div class="control">
-                    <input type="text" class="input" name="username" id="username" required>
+            <!-- Username Field -->
+            <div class="space-y-1.5">
+                <div class="flex items-center gap-2 ml-1">
+                    <label class="block text-sm font-semibold text-text-main uppercase tracking-wide opacity-80"
+                        for="username">
+                        Username
+                    </label>
+                    <p id="status_message" class="text-xs  hidden"></p>
                 </div>
-            </div>
-            <br>
-            <div style="display: flex; flex-direction: column; align-items: center;">
-                <button type="button" id="check_username" class="button is-link is-light is-rounded"
-                    style="height: 50px;">
-                    <i class="fas fa-search mr-2"></i>Check username
-                </button>
-            </div>
-
-            <div class="field">
-                <label class="label" style="display: inline-block;">Password</label>
-                <p id="two" style="display: inline-block; margin-left: 5px;font-size: 18px; color: red;">
-                </p>
-                <div class="control has-icons-right">
-                    <input type="password" name="password" id="password" class="input" required maxlength="15"
-                        minlength="8">
-                    <span class="icon is-small is-right" id="toggle_password"
-                        style="cursor: pointer; pointer-events: auto;">
-                        <i class="fas fa-eye" id="eye_icon" style="color: #05668d !important;"></i>
+                <div class="relative group">
+                    <span
+                        class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors">
+                        <span class="material-symbols-outlined text-[20px]" style="margin-top:7px;">person</span>
                     </span>
+                    <input
+                        class="w-full h-12 pl-11 pr-4 bg-input-bg border border-input-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/10 focus:outline-none text-gray-800 text-base transition-all placeholder-gray-400 hover:border-gray-300"
+                        id="username" name="username" placeholder="Choose a username" type="text" required />
                 </div>
             </div>
-            <br>
-            <div style="display: flex; flex-direction: column; align-items: center;">
-                <button type="submit" id="register_btn" class="button is-link is-light is-rounded"
-                    style="height: 50px;">
-                    <i class="fas fa-user-plus mr-2"></i>Register
-                </button>
 
-                <button type="button" id="cancel_btn" class="button is-link is-light is-rounded" style="height: 50px;">
-                    <i class="fas fa-arrow-left mr-2"></i>Back
+            <!-- Check Username Button -->
+            <div class="flex justify-center">
+                <button
+                    class="w-full h-12 flex items-center justify-center space-x-2 bg-secondary/10 border-2 border-secondary/30 hover:bg-secondary/20 hover:border-secondary/50 text-secondary font-semibold rounded-xl transition-all transform active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+                    type="button" id="check_username">
+                    <span class="material-symbols-outlined text-[20px]">search</span>
+                    <span>Check Username</span>
+                </button>
+            </div>
+
+            <!-- Password Field -->
+            <div class="space-y-1.5">
+                <div class="flex items-center gap-2 ml-1">
+                    <label class="block text-sm font-semibold text-text-main uppercase tracking-wide opacity-80"
+                        for="password">
+                        Password
+                    </label>
+                    <p class="text-xs text-text-muted ">(8-15 characters)</p>
+                </div>
+                <div class="relative group">
+                    <span
+                        class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors">
+                        <span class="material-symbols-outlined text-[20px]" style="margin-top:7px;">lock</span>
+                    </span>
+                    <input
+                        class="w-full h-12 pl-11 pr-12 bg-input-bg border border-input-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/10 focus:outline-none text-gray-800 text-base transition-all placeholder-gray-400 hover:border-gray-300"
+                        id="password" name="password" placeholder="Create a password" type="password" required
+                        minlength="8" maxlength="15" />
+                    <button aria-label="Toggle password visibility"
+                        class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors focus:outline-none cursor-pointer p-1"
+                        type="button" id="toggle_password">
+                        <span class="material-symbols-outlined text-[20px]" id="eye_icon"
+                            style="margin-top:9px;">visibility</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="pt-6 space-y-3 flex flex-col items-center w-full">
+                <button
+                    class="w-full h-14 flex items-center justify-center space-x-2 bg-gradient-to-r from-gray-900 to-gray-800 hover:from-black hover:to-gray-900 text-white font-semibold rounded-2xl shadow-lg shadow-gray-200 transition-all transform active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+                    type="submit" id="register_btn">
+                    <span>Register</span>
+                    <span class="material-symbols-outlined text-[20px]">person_add</span>
+                </button>
+                <button type="button" id="cancel_btn"
+                    class="w-full h-14 flex items-center justify-center space-x-2 bg-white border-2 border-gray-100 hover:bg-gray-50 hover:border-gray-200 text-gray-700 font-semibold rounded-2xl transition-all transform active:scale-[0.98]">
+                    <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+                    <span>Back to Login</span>
                 </button>
             </div>
         </form>
+
     </div>
+
     <script>
+        // Prevent form resubmission
         if (window.history.replaceState) {
             window.history.replaceState(null, null, window.location.href);
         }
 
         document.addEventListener("DOMContentLoaded", function () {
-
             const usernameInput = document.getElementById("username");
             const passwordInput = document.getElementById("password");
             const checkBtn = document.getElementById("check_username");
             const registerBtn = document.getElementById("register_btn");
-            const one = document.getElementById("one")
-            const two = document.getElementById("two")
+            const statusMessage = document.getElementById("status_message");
             const cancelBtn = document.getElementById("cancel_btn");
+            const togglePassword = document.getElementById("toggle_password");
+            const eyeIcon = document.getElementById("eye_icon");
 
+            // Initially disable buttons
             checkBtn.disabled = true;
             registerBtn.disabled = true;
 
+            // Enable check button when username is entered
             usernameInput.addEventListener("input", function () {
-                checkBtn.disabled = false;
+                checkBtn.disabled = usernameInput.value.trim() === "";
                 registerBtn.disabled = true; // Disable until new username is checked
-                one.innerHTML = ""; // Clear status
-                one.style.display = "none";
+                statusMessage.innerHTML = ""; // Clear status
+                statusMessage.classList.add("hidden");
             });
 
+            // Enable register button when password meets requirements
             passwordInput.addEventListener("input", function () {
                 // Only enable if username is already confirmed unique
-                if (one.innerHTML === "( Unique username )" && passwordInput.value.length >= 8) {
+                if (statusMessage.textContent === "Unique username" && passwordInput.value.length >= 8) {
                     registerBtn.disabled = false;
                 } else {
                     registerBtn.disabled = true;
                 }
             });
 
+            // Check username availability
             checkBtn.addEventListener("click", async function (event) {
                 event.preventDefault();
                 const username = usernameInput.value.trim();
                 const safeUsername = encodeURIComponent(username);
-                const data = await fetch(`/register/check_username/?username=${safeUsername}`);
-                const response = await data.json();
-                if (response.exist_username) {
-                    one.innerHTML = "( Username already exists )";
-                    one.style.display = "inline-block";
-                    one.style.color = "red";
-                    registerBtn.disabled = true;
-                }
 
-                else if (response.unique_username) {
-                    usernameInput.value = response.unique_username;
-                    one.innerHTML = "( Unique username )";
-                    one.style.display = "inline-block";
-                    one.style.color = "green";
+                try {
+                    const data = await fetch(`/register/check_username/?username=${safeUsername}`);
+                    const response = await data.json();
 
-                    // Enable register button if password is already filled correctly
-                    if (passwordInput.value.length >= 8) {
-                        registerBtn.disabled = false;
+                    if (response.exist_username) {
+                        statusMessage.innerHTML = "Username already exists";
+                        statusMessage.classList.remove("hidden");
+                        statusMessage.classList.remove("text-green-500");
+                        statusMessage.classList.add("text-red-500");
+                        registerBtn.disabled = true;
+                    } else if (response.unique_username) {
+                        usernameInput.value = response.unique_username;
+                        statusMessage.innerHTML = "Unique username";
+                        statusMessage.classList.remove("hidden");
+                        statusMessage.classList.remove("text-red-500");
+                        statusMessage.classList.add("text-green-500");
+
+                        // Enable register button if password is already filled correctly
+                        if (passwordInput.value.length >= 8) {
+                            registerBtn.disabled = false;
+                        }
                     }
+                } catch (error) {
+                    console.error("Error checking username:", error);
                 }
             });
 
+            // Back button
             cancelBtn.addEventListener("click", function (event) {
                 window.location.href = `/`;
             });
 
-            const togglePassword = document.getElementById("toggle_password");
-            const eyeIcon = document.getElementById("eye_icon");
-
+            // Password visibility toggle
             togglePassword.addEventListener("click", function () {
                 const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
                 passwordInput.setAttribute("type", type);
 
                 if (type === "password") {
-                    eyeIcon.classList.remove("fa-eye-slash");
-                    eyeIcon.classList.add("fa-eye");
+                    eyeIcon.textContent = "visibility";
                 } else {
-                    eyeIcon.classList.remove("fa-eye");
-                    eyeIcon.classList.add("fa-eye-slash");
+                    eyeIcon.textContent = "visibility_off";
                 }
             });
         });
-
     </script>
-
-    <style>
-        * {
-            color-scheme: light only !important;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: white !important;
-            min-height: 100vh;
-            margin: 0;
-            padding: 0;
-            color-scheme: light only;
-        }
-
-        input,
-        select,
-        textarea {
-            color-scheme: light !important;
-            background-color: white !important;
-        }
-
-        input:-webkit-autofill,
-        input:-webkit-autofill:hover,
-        input:-webkit-autofill:focus {
-            -webkit-box-shadow: 0 0 0 1000px white inset !important;
-            -webkit-text-fill-color: #333 !important;
-        }
-
-        .container-one {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding-top: 50px;
-            color: #DA70D6 !important;
-        }
-
-        .container-one p {
-            font-size: 60px;
-            margin: 0;
-        }
-
-        .container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .box {
-            margin-bottom: 40px;
-            width: 600px;
-            background: white !important;
-            border-radius: 20px;
-            box-shadow: none !important;
-            border: none !important;
-            padding: 40px;
-        }
-
-        .field {
-            margin-bottom: 25px;
-        }
-
-        .label {
-            color: #023e8a !important;
-            margin-bottom: 8px;
-            font-size: 22px;
-        }
-
-        .input {
-            border-radius: 10px;
-            border: 2px solid #e0e0e0;
-            padding: 12px 16px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            color: #023e8a !important;
-        }
-
-        .input:focus {
-            border-color: #05668d;
-            box-shadow: 0 0 0 3px rgba(5, 102, 141, 0.1);
-            transform: translateY(-2px);
-            color: #023e8a !important;
-        }
-
-        .input:hover {
-            border-color: #b0b0b0;
-            color: #023e8a !important;
-        }
-
-        .button {
-            width: 50%;
-            margin-bottom: 15px;
-        }
-
-        .button.is-link.is-light:disabled {
-            background-color: #eff5fb !important;
-            border-color: transparent !important;
-            opacity: 0.5;
-        }
-
-        .button.is-link.is-light:hover:not(:disabled) {
-            background-color: #d6e9f8 !important;
-            border-color: transparent !important;
-        }
-
-        .button.is-link.is-light:active:not(:disabled) {
-            background-color: #c2dff5 !important;
-            border-color: transparent !important;
-        }
-
-        #toggle_password {
-            transition: all 0.2s ease;
-        }
-
-        #toggle_password:hover {
-            transform: scale(1.1);
-        }
-
-        #eye_icon {
-            transition: color 0.2s ease;
-        }
-
-
-
-        /* Error message styling */
-        #one,
-        #two {
-            font-size: 13px;
-            animation: shake 0.5s ease;
-        }
-
-        @keyframes shake {
-
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-
-            25% {
-                transform: translateX(-5px);
-            }
-
-            75% {
-                transform: translateX(5px);
-            }
-        }
-    </style>
-
 </body>
 
 </html>

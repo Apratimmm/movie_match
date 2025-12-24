@@ -1,82 +1,235 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <title>movie_match</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-</head>
-
-<body>
-
-  <div class="container-one">
-    <div>
-      <p style="font-size: 60px;">Movie_match</p>
-    </div>
-  </div>
-  <div class="container-two" style="height: 60vh;">
-    <div id="csrf-token" style="display:none;">
-      {% csrf_token %}
-    </div>
-
-    <a href=" {% url 'show' %} "> <button class="button is-link is-light is-rounded" style=" height: 50px;"><i
-          class="fas fa-list-ol mr-2"></i>
-        Top 10s</button> </a>
-
-    <a href=" {% url 'show_user_info' %} "> <button class="button is-link is-light is-rounded"
-        style="  height: 50px;"><i class="fas fa-user-circle mr-2"></i> Your info</button> </a>
-
-    <a href=" {% url 'show_other_users' %} "> <button class="button is-link is-light is-rounded"
-        style="  height: 50px;"><i class="fas fa-users mr-2"></i> Other users</button> </a>
-
-    <a href=" {% url 'find_vector' %} "> <button class="button is-link is-light is-rounded" style="  height: 50px;"><i
-          class="fas fa-film mr-2"></i> Find match</button> </a>
-
-    <a href=" {% url 'login_page' %} "> <button class="button is-link is-light is-rounded" style="  height: 50px;"><i
-          class="fas fa-sign-in-alt mr-2"></i> Sign-in/Register</button> </a>
-  </div>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Movie_match Home</title>
+  <link href="https://fonts.googleapis.com" rel="preconnect" />
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+    rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#FF4D8C", // Vibrant pink for branding
+            secondary: "#6366F1", // Indigo accent
+            "text-main": "#1F2937",
+            "text-muted": "#9CA3AF",
+            "input-bg": "#F9FAFB",
+            "input-border": "#E5E7EB",
+            "btn-light": "#F3F4F6",
+          },
+          fontFamily: {
+            sans: ['Poppins', 'sans-serif'],
+          },
+          borderRadius: {
+            DEFAULT: "12px",
+            "xl": "16px",
+            "2xl": "24px",
+            "3xl": "32px",
+          },
+          boxShadow: {
+            'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+            'glow': '0 0 15px rgba(255, 77, 140, 0.3)',
+          }
+        },
+      },
+    };
+  </script>
   <style>
-    body,
-    html {
-      width: 100%;
-      height: 100%;
-      font-family: 'Poppins', sans-serif;
-
+    body {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
-    .mr-2 {
-      margin-right: 0.5rem;
+    /* Floating animation for background blobs */
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0) translateX(0);
+      }
+
+      33% {
+        transform: translateY(-20px) translateX(10px);
+      }
+
+      66% {
+        transform: translateY(10px) translateX(-10px);
+      }
     }
 
-    .container-one {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding-top: 50px;
-      color: #DA70D6;
+    @keyframes float-reverse {
+
+      0%,
+      100% {
+        transform: translateY(0) translateX(0);
+      }
+
+      33% {
+        transform: translateY(15px) translateX(-15px);
+      }
+
+      66% {
+        transform: translateY(-10px) translateX(10px);
+      }
     }
 
-    .container-two {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-evenly;
-      align-items: center;
-      margin-top: 10px;
-      margin-bottom: 10px;
+    /* Pulse animation for logo */
+    @keyframes pulse-glow {
+
+      0%,
+      100% {
+        box-shadow: 0 0 15px rgba(255, 77, 140, 0.3);
+      }
+
+      50% {
+        box-shadow: 0 0 25px rgba(255, 77, 140, 0.6);
+      }
     }
 
-    button {
-      width: 260px;
+    /* Fade in up animation */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-float {
+      animation: float 8s ease-in-out infinite;
+    }
+
+    .animate-float-reverse {
+      animation: float-reverse 10s ease-in-out infinite;
+    }
+
+    .animate-pulse-glow {
+      animation: pulse-glow 3s ease-in-out infinite;
+    }
+
+    .animate-fadeInUp {
+      animation: fadeInUp 0.6s ease-out forwards;
+    }
+
+    /* Stagger animation delays for buttons */
+    .btn-1 {
+      animation-delay: 0.1s;
+      opacity: 0;
+    }
+
+    .btn-2 {
+      animation-delay: 0.2s;
+      opacity: 0;
+    }
+
+    .btn-3 {
+      animation-delay: 0.3s;
+      opacity: 0;
+    }
+
+    .btn-4 {
+      animation-delay: 0.4s;
+      opacity: 0;
+    }
+
+    .btn-5 {
+      animation-delay: 0.5s;
+      opacity: 0;
+    }
+
+    /* Icon rotation on hover */
+    .nav-button:hover .icon-rotate {
+      transform: rotate(360deg);
+      transition: transform 0.6s ease;
+    }
+
+    .icon-rotate {
+      transition: transform 0.3s ease;
     }
   </style>
-  <div style="display: flex; justify-content: center;">
-    <div style="width: 20%; border-radius: 50px; overflow: hidden;">
-      <marquee behavior="scroll" direction="left" style=" color: #DA70D6; font-weight: 600; display: block;">
-        • pick movie(s) • find match(s) • pick movie(s) • find match(s) • pick movie(s) • find match(s) •
-      </marquee>
+</head>
+
+<body class="bg-white font-sans min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden">
+  <!-- Background gradient blobs -->
+  <div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+    <div
+      class="absolute top-[-15%] right-[-5%] w-[500px] h-[500px] bg-blue-50/50 rounded-full blur-[100px] animate-float">
     </div>
+    <div
+      class="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-pink-50/60 rounded-full blur-[80px] animate-float-reverse">
+    </div>
+  </div>
+
+  <!-- Hidden CSRF Token -->
+  <div id="csrf-token" style="display:none;">
+    {% csrf_token %}
+  </div>
+
+  <div class="w-full max-w-[400px] flex flex-col space-y-10">
+    <!-- Header -->
+    <div class="text-center space-y-2">
+      <div
+        class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-tr from-primary to-purple-500 rounded-2xl shadow-glow mb-4 text-white animate-pulse-glow">
+        <span class="material-symbols-outlined text-4xl">movie_filter</span>
+      </div>
+      <h1 class="text-4xl font-bold text-text-main tracking-tight">
+        Movie<span class="text-primary">_</span>match
+      </h1>
+      <div class="flex justify-center w-full">
+        <div class="w-3/4 rounded-full overflow-hidden">
+          <marquee behavior="scroll" direction="left" class="text-primary font-semibold text-sm block">
+            • pick movie(s) • find match(s) • pick movie(s) • find match(s) • pick movie(s) • find match(s) •
+          </marquee>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div class="flex flex-col space-y-4">
+      <a href="{% url 'show' %}"
+        class="nav-button w-full h-14 flex items-center justify-center space-x-3 bg-[#B2ABF2] hover:bg-[#9D95E8] text-white font-semibold rounded-2xl shadow-lg shadow-purple-200 transition-all transform hover:scale-[1.02] active:scale-[0.98] animate-fadeInUp btn-1">
+        <span class="material-symbols-outlined text-[22px] icon-rotate">format_list_numbered</span>
+        <span>Top 10s</span>
+      </a>
+
+      <a href="{% url 'show_user_info' %}"
+        class="nav-button w-full h-14 flex items-center justify-center space-x-3 bg-[#15B7AF] hover:bg-[#12A199] text-white font-semibold rounded-2xl shadow-lg shadow-teal-200 transition-all transform hover:scale-[1.02] active:scale-[0.98] animate-fadeInUp btn-2">
+        <span class="material-symbols-outlined text-[22px] icon-rotate">account_circle</span>
+        <span>Your Info</span>
+      </a>
+
+      <a href="{% url 'show_other_users' %}"
+        class="nav-button w-full h-14 flex items-center justify-center space-x-3 bg-[#5488B6] hover:bg-[#4A7AA3] text-white font-semibold rounded-2xl shadow-lg shadow-blue-200 transition-all transform hover:scale-[1.02] active:scale-[0.98] animate-fadeInUp btn-3">
+        <span class="material-symbols-outlined text-[22px] icon-rotate">group</span>
+        <span>Other Users</span>
+      </a>
+
+      <a href="{% url 'find_vector' %}"
+        class="nav-button w-full h-14 flex items-center justify-center space-x-3 bg-[#FA7921] hover:bg-[#E16A1A] text-white font-semibold rounded-2xl shadow-lg shadow-green-200 transition-all transform hover:scale-[1.02] active:scale-[0.98] animate-fadeInUp btn-4">
+        <span class="material-symbols-outlined text-[22px] icon-rotate">movie</span>
+        <span>Find Match</span>
+      </a>
+
+      <a href="{% url 'login_page' %}"
+        class="nav-button w-full h-14 flex items-center justify-center space-x-3 bg-[#89043D] hover:bg-[#750336] text-white font-semibold rounded-2xl shadow-lg shadow-red-200 transition-all transform hover:scale-[1.02] active:scale-[0.98] animate-fadeInUp btn-5">
+        <span class="material-symbols-outlined text-[22px] icon-rotate">login</span>
+        <span>Sign-out</span>
+      </a>
+    </div>
+
   </div>
 </body>
 
