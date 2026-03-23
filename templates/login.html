@@ -48,6 +48,27 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
+        
+        @keyframes marquee-scroll {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .marquee-container {
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .marquee-content {
+            display: inline-flex;
+            white-space: nowrap;
+            animation: marquee-scroll 12s linear infinite;
+        }
     </style>
 </head>
 
@@ -70,11 +91,11 @@
                 Movie<span class="text-primary">_</span>match
             </h1>
             <div class="flex justify-center w-full">
-                <div class="w-3/4 rounded-full overflow-hidden">
-                    <marquee behavior="scroll" direction="left" class="text-primary font-semibold text-sm block" style="margin-top:5px;">
-                        • pick movie(s) • find match(s) • pick movie(s) • find match(s) • pick movie(s) • find match(s)
-                        •
-                    </marquee>
+                <div class="w-3/4 rounded-full overflow-hidden marquee-container" style="margin-top:5px;">
+                    <div class="marquee-content text-primary font-semibold text-sm">
+                        <span>• pick movie(s) • find match(s) • pick movie(s) • find match(s) • pick movie(s) • find match(s)&nbsp;</span>
+                        <span>• pick movie(s) • find match(s) • pick movie(s) • find match(s) • pick movie(s) • find match(s)&nbsp;</span>
+                    </div>
                 </div>
             </div>
         </div>
