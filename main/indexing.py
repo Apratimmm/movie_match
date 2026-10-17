@@ -1,13 +1,10 @@
-from pymongo import MongoClient
+from main.db import db
 
-
-client = MongoClient("mongodb+srv://Apratim:AapraUchiha@datacluster.gv3cli6.mongodb.net/?appName=datacluster")
-
-# Use your database name — MongoDB creates it automatically if it doesn’t exist
-db = client["mm_database"]
+# Uses the same client/connection string as the rest of the app (MONGO_URI in .env).
+# MongoDB creates the database/collection automatically if it doesn't exist yet.
 
 db.top_10s.create_index(
-    [("username",1),("movies.id",1)],
+    [("username", 1), ("movies.id", 1)],
     unique=True,
     sparse=True,
 )
