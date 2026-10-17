@@ -1,0 +1,28 @@
+# Never deploy the virtualenv
+virenv/
+venv/
+.venv/
+
+# Secrets / local env
+.env
+*.env
+
+# Local database (unused on Vercel; app data lives in MongoDB)
+db.sqlite3
+*.sqlite3
+
+# Python caches
+__pycache__/
+*.py[cod]
+
+# IDE
+.idea/
+.vscode/
+
+# One-off tooling, not needed at runtime
+scripts/
+
+# Docs / platform-specific files
+README.md
+Procfile
+.gitignore
