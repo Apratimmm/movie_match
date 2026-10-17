@@ -14,7 +14,7 @@ def show_other_users(request):
         uu = u['username']
         if uu != curr_user:
             final_users.append(uu)
-    pprint(final_users)
+
 
     pprint('working')
     return render(request, 'other_users.html', {'users':final_users})

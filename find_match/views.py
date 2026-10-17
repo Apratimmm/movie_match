@@ -56,14 +56,12 @@ def show_results(request):
     final_score = {}
     for name, other_user_vector in user_and_vector.items():
         final_score[name]= similairty_score(curr_user_vector,other_user_vector)
-    pprint(final_score)
 
     sorted_final_score = sorted(
         final_score.items(), 
         key=lambda item: (item[1] if not np.isnan(item[1]) else -1), 
         reverse=True
     )
-    pprint(sorted_final_score)
     return render(request, 'match/found_match.html', {'final_score': sorted_final_score})
 
 def show_top_10s(request):
